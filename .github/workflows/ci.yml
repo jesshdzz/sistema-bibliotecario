@@ -1,0 +1,42 @@
+# Integración continua: en cada Pull Request y en cada push a main se revisa
+# que el código compile, pase lint, pruebas y que las migraciones estén al día.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # La versión de pnpm se toma de "packageManager" en package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+      # Falla si cambiaron src/db/schema pero olvidaron generar la migración.
+      - name: Las migraciones coinciden con el esquema
+        run: |
+          pnpm db:generate
+          if [ -n "$(git status --porcelain drizzle)" ]; then
+            echo "::error::El esquema cambió pero falta una migración. Ejecuta 'pnpm db:generate' y súbela."
+            git status --porcelain drizzle
+            exit 1
+          fi
