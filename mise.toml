@@ -1,0 +1,6 @@
+# Herramientas del proyecto. Ejecutar `mise install`.
+[tools]
+node = "24"
+
+[settings]
+idiomatic_version_file_enable_tools = ["pnpm"]
