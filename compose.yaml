@@ -1,0 +1,23 @@
+# Entorno de desarrollo: solo la base de datos, la aplicación corre en local
+name: sistema-bibliotecario
+
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biblioteca
+      POSTGRES_PASSWORD: biblioteca_dev
+      POSTGRES_DB: biblioteca
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U biblioteca -d biblioteca']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:

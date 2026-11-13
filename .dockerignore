@@ -1,0 +1,31 @@
+# Dependencias y artefactos
+node_modules/
+.pnpm-store/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+
+# Secretos y entorno
+.env
+.env.*
+
+# Git, CI y documentación
+.git/
+.github/
+docs/
+*.md
+
+# Archivos de Docker
+Dockerfile*
+.dockerignore
+compose*.yaml
+compose*.yml
+
+# Editor y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
