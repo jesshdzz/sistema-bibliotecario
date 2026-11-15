@@ -33,9 +33,19 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      data-theme="biblioteca-light"
+      suppressHydrationWarning
       className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        {/* Aplica el tema guardado antes del primer pintado para que no parpadee (ver BotonTema). */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: script estático propio, sin datos del usuario
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}',
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-base-200 text-base-content font-sans antialiased">
         {children}
       </body>

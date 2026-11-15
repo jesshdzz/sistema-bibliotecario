@@ -2,43 +2,33 @@
 @plugin "daisyui";
 
 @layer base {
-  :root {
-    --font-serif:
-      "Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif;
-    --font-sans:
-      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-mono:
-      "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      monospace;
-
-    /* Layout & Dimensiones */
-    --container-max: 1360px;
-    --sidebar-width: 280px;
-    --header-height: 72px;
-  }
-
-  body {
-    font-family: var(--font-sans);
-    background-color: var(--color-base-200);
-    color: var(--color-base-content);
-    -webkit-font-smoothing: antialiased;
-  }
-
   h1,
-  h2,
-  .font-editorial {
+  h2 {
     font-family: var(--font-serif);
   }
 
   code,
-  pre,
-  .font-catalog {
+  pre {
     font-family: var(--font-mono);
   }
 }
 
+/* Ancho máximo de página (1360px) */
+@utility contenedor {
+  @apply w-full max-w-340 mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@theme inline {
+  --color-marca: var(--marca);
+  --color-marca-content: var(--marca-content);
+}
+
+@utility tarjeta {
+  @apply bg-base-100 border border-base-300 rounded-box;
+}
+
 /* ==========================================================================
-   TEMA CLARO (INSTITUCIONAL - DEFAULT)
+   TEMA CLARO (DEFAULT)
    ========================================================================== */
 @plugin "daisyui/theme" {
   name: "biblioteca-light";
@@ -55,6 +45,10 @@
   /* Identidad Universidad */
   --color-primary: #6f060a;
   --color-primary-content: #ffffff;
+
+  /* Superficie de marca */
+  --marca: #6f060a;
+  --marca-content: #ffffff;
 
   --color-secondary: #c3934f;
   --color-secondary-content: #1c1508;
@@ -90,7 +84,7 @@
 }
 
 /* ==========================================================================
-   TEMA OSCURO (NOCTURNO / LECTURA PROLONGADA)
+   TEMA OSCURO
    ========================================================================== */
 @plugin "daisyui/theme" {
   name: "biblioteca-dark";
@@ -107,6 +101,10 @@
   /* Identidad adaptada a contraste oscuro */
   --color-primary: #b8292f;
   --color-primary-content: #ffffff;
+
+  /* Superficie de marca */
+  --marca: #4a0a0e;
+  --marca-content: #f4f4f5;
 
   --color-secondary: #d4a359;
   --color-secondary-content: #140f05;
@@ -137,6 +135,6 @@
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
-  --depth: 0; /* En modo oscuro se priorizan bordes sutiles sobre sombras */
+  --depth: 0;
   --noise: 0;
 }
