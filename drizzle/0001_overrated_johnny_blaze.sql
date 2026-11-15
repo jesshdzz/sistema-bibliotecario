@@ -1,0 +1,1 @@
+ALTER TABLE "prestamo_item" ADD CONSTRAINT "prestamo_item_vivo_sin_devolucion" CHECK (not "prestamo_item"."vivo" or "prestamo_item"."devuelto_en" is null);
