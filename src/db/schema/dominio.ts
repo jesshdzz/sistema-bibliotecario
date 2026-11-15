@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   index,
   jsonb,
   pgEnum,
@@ -117,6 +118,10 @@ export const prestamoItem = pgTable(
       .on(t.ejemplarId)
       .where(sql`${t.vivo} = true`),
     index("prestamo_item_prestamo_idx").on(t.prestamoId),
+    check(
+      "prestamo_item_vivo_sin_devolucion",
+      sql`not ${t.vivo} or ${t.devueltoEn} is null`,
+    ),
   ],
 );
 
