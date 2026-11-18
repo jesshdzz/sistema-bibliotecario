@@ -1,6 +1,7 @@
 ---
 name: ui-design-system
 description: Design system rules, DaisyUI v5 semantic tokens, typography hierarchy, and component standards for the University Library web application.
+model: sonnet
 ---
 
 # University Library Design System (DaisyUI v5 + Tailwind v4)
