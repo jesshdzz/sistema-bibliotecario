@@ -37,9 +37,8 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        {/* Aplica el tema guardado antes del primer pintado para que no parpadee (ver BotonTema). */}
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: script estático propio, sin datos del usuario
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: script estático propio
           dangerouslySetInnerHTML={{
             __html:
               'try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}',

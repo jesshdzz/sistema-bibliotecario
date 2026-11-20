@@ -18,11 +18,6 @@
   @apply w-full max-w-340 mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-@theme inline {
-  --color-marca: var(--marca);
-  --color-marca-content: var(--marca-content);
-}
-
 @utility tarjeta {
   @apply bg-base-100 border border-base-300 rounded-box;
 }
@@ -45,10 +40,6 @@
   /* Identidad Universidad */
   --color-primary: #6f060a;
   --color-primary-content: #ffffff;
-
-  /* Superficie de marca */
-  --marca: #6f060a;
-  --marca-content: #ffffff;
 
   --color-secondary: #c3934f;
   --color-secondary-content: #1c1508;
@@ -101,10 +92,6 @@
   /* Identidad adaptada a contraste oscuro */
   --color-primary: #b8292f;
   --color-primary-content: #ffffff;
-
-  /* Superficie de marca */
-  --marca: #4a0a0e;
-  --marca-content: #f4f4f5;
 
   --color-secondary: #d4a359;
   --color-secondary-content: #140f05;
