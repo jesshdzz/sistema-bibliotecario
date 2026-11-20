@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project
+
+University library loan system, built as a social-service project at the vice-rectorate (2 developers, 3 librarians). Students request books from their own devices and pick them up at the desk within 30 minutes; librarians manage the catalogue (MARC 21 structure, LCC classification), the desk, sanctions and reports. Users register and sign in with email and password, like on any website; people outside the university can register too (Google-only access is not confirmed and is not a requirement). A new account is `publico`; librarians promote it to student or staff after validating the credential.
+
+**Current state:** the app is a UI prototype: components and views built to show the design to the client, with a minimal initial schema in `src/db/schema/`. Domain logic and authentication are not wired yet.
+
 ## Commands
 
 ```bash
@@ -24,7 +30,7 @@ Drizzle: after changing `src/db/schema/`, run `pnpm db:generate` and commit the 
 - Next.js 16 (App Router) — read `node_modules/next/dist/docs/` before writing Next.js code; this version may differ from training data
 - React 19, TypeScript, Tailwind CSS 4 + DaisyUI 5
 - Drizzle ORM + `pg` (PostgreSQL)
-- better-auth for authentication (user, session, account, verification tables in `src/db/schema/auth.ts`); not wired yet, `src/lib/auth.ts` does not exist
+- better-auth for authentication with email and password sign-up/sign-in (user, session, account, verification tables in `src/db/schema/auth.ts`; `account.password` already exists); not wired yet, `src/lib/auth.ts` does not exist. Google is not required (spec Q24)
 - Biome for linting and formatting (2-space indent, double quotes — Biome defaults)
 - `output: 'standalone'` in `next.config.ts` — containerized deploy
 
@@ -34,12 +40,42 @@ Drizzle: after changing `src/db/schema/`, run `pnpm db:generate` and commit the 
 
 - `src/db/index.ts`: Drizzle client with singleton pool (reused in dev via `globalThis`)
 - `src/db/schema/auth.ts`: better-auth tables + relations (generated, do not edit by hand)
-- `src/db/schema/dominio.ts`: Library domain—titulo (books), ejemplar (copies), prestamo (loans), prestamoItem (copies in a loan), parametro (config)
+- `src/db/schema/dominio.ts`: initial library domain—titulo (books), ejemplar (copies, with a unique `codigo_barras`), prestamo (loans, with partial unique index: one live loan per user), prestamoItem (copies in a loan, with partial unique index: one live item per copy), parametro (config). It is a minimal starting point: `docs/spec/01-dominio.md` lists what changes (22-field titulo, `numero_utm` instead of `codigo_barras`, categories, user profile, sanctions, audit log)
 - Enums: tipoMaterial, estadoEjemplar, modalidadPrestamo, estadoPrestamo
 
 **App** (`src/app/`): Next.js App Router, mostly scaffolded.
 
 **Env**: `.env` (gitignored). `.env.example` (dev) and `.env.prod.example` (production) are templates—keep in sync when adding vars. Requires `DATABASE_URL`.
+
+## Specification (read before building)
+
+The functional specification lives in `docs/spec/` (written in Spanish). Start with `docs/spec/README.md`, then read the file for your area before writing code.
+
+- The spec is the source of truth for the domain. The initial schema predates it: where `src/db/schema/dominio.ts` disagrees with `docs/spec/01-dominio.md`, follow the spec and propose the schema change (with a migration) instead of bending the spec to the code. Ask before dropping tables that hold data.
+- `docs/spec/06-preguntas-abiertas.md` lists open questions, each with a default proposal. If your task depends on one, use the default, keep it isolated and configurable, and say so in your reply. If there is no default, ask.
+- Do not fill gaps with assumptions and do not invent APIs, methods, libraries or settings. If you are unsure about Next.js 16, Drizzle or better-auth, check the installed docs or the official documentation.
+- If a client decision changes, update `docs/spec/` first, then the code.
+
+## Project rules
+
+- Use pnpm, never npm. Pin exact versions (`pnpm add <package>`) and do not upgrade dependencies on your own.
+- Nothing from the library regulation is hardcoded. Business values (pickup window, max books per loan, hours, sanction table, categories, languages, UTM format…) live in the `parametro` table and editable catalogue tables, managed from a configuration screen by the librarians. See `docs/spec/04-informes-configuracion.md`.
+- Enforce critical invariants in the database (unique and partial indexes, constraints) and the rest in the service layer inside a transaction.
+- Authorize on the server by role (student, librarian, library administrator, read-only viewer, technical administrator) and by user type (`alumno`, `docente`, `publico`: public users never take books home). Role and user type are assigned by staff, never by the user at sign-up. Never rely on hidden UI.
+- There is no SMTP yet (spec Q23): do not make sign-up, email verification or password reset depend on sending email. Passwords are handled only by better-auth; never store or log them. Rate-limit sign-in and sign-up.
+- Store timestamps in UTC and display them in `America/Mexico_City`.
+- UI copy is in Mexican Spanish. Domain tables and columns use Spanish `snake_case` names (`numero_ficha`), as in the spec.
+- The prototype views are the visual reference approved for the client: when wiring them to real data, keep their layout and design-system rules unless asked to change them.
+- Do not commit unless asked. Never commit `.env` or secrets.
+
+## Glossary (do not confuse these)
+
+- **Título** (title): the work, one bibliographic record. It has a **número de ficha**: a system-generated index, unique per title, immutable.
+- **Ejemplar** (copy): a physical copy. Each copy has its own **número UTM**, which is also its barcode: assigned by hand by the librarians, editable, unique among live copies, and reusable once freed.
+- **Clasificación (LCC)**: the Library of Congress Classification call number, e.g. `PQ2226 .C65 D8`. Not the same as the category.
+- **Categoría** (category): one of Consulta, Tesis, Posgrado, INEGI, Libros y revistas (an editable list). "Consulta" is for in-library use only.
+- **Préstamo vivo** (live loan): `pre_prestamo`, `activo` or `vencido`. A user can have only one.
+- **Tipo de usuario** (user type): `alumno`, `docente` (staff) or `publico`. Distinct from the role (what the person can do in the system).
 
 ## UI & Design System Enforcement (CRITICAL)
 

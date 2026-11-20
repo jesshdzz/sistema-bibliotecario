@@ -1,6 +1,7 @@
 ---
 name: ui-design-system
 description: Design system rules, DaisyUI v5 semantic tokens, typography hierarchy, and component standards for the University Library web application.
+model: sonnet
 ---
 
 # University Library Design System (DaisyUI v5 + Tailwind v4)
@@ -16,11 +17,10 @@ Never use raw Tailwind colors (`gray-*`, `red-*`, `amber-*`). Map every visual e
   - `text-base-content`: Primary readable text. Use `text-base-content/70` for secondary metadata (authors, publication year).
 
 - **Brand & Actions:**
-  - `primary` (`#6F060A` light / `#B8292F` dark): Primary CTAs ("Buscar", "Solicitar Préstamo"), active navigation indicators, checked checkboxes/radios. Pair with `text-primary-content`.
+  - `primary` (`#6F060A` light / `#B8292F` dark): Primary CTAs ("Buscar", "Solicitar Préstamo"), active navigation indicators, checked checkboxes/radios, and the main Navbar and auth side panel surfaces. Pair with `text-primary-content`; use `btn-secondary` for CTAs placed on a `primary` surface.
   - `secondary` (`#C3934F` light / `#D4A359` dark): Institutional accents, special collection badges, top/bottom structural borders (`border-secondary`). **CRITICAL:** Because contrast against white is low, NEVER use `text-secondary` for small body text. Always pair `bg-secondary` with `text-secondary-content` (dark ink).
   - `accent` (`#1E6F50` light / `#2A9D70` dark): Digital access actions ("Leer en línea", "Descargar PDF") and physical availability status ("Disponible en sala"). Pair with `text-accent-content`.
-  - `marca` (`#6F060A` light / `#4A0A0E` dark): Brand surface for large institutional areas: main Navbar, home hero, auth side panel. Light is the university wine as-is; dark is a deep wine because `primary` glares on large areas. Pair with `text-marca-content`. Defined in `globals.css` (`--marca` per theme). Use `btn-secondary` for CTAs placed on it.
-  - `neutral` (`#0A1426` light / `#1E293B` dark): Footer and high-contrast classification headers. Pair with `text-neutral-content`.
+  - `neutral` (`#0A1426` light / `#1E293B` dark): Footer, home hero and high-contrast classification headers. Pair with `text-neutral-content`.
 
 - **Semantic States (System Feedback):**
   - `info`: Library hours, reservation rules, search tips.
@@ -57,6 +57,6 @@ Maintain an authoritative, academic aesthetic. Avoid overly rounded "pill" shape
 
 - **Max Container Width:** `max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8`.
 - **Prose / Reading Width:** `max-w-[68ch]` for library regulations, thesis abstracts, and institutional history.
-- **Navbar:** `bg-marca text-marca-content border-b-2 border-secondary min-h-[72px]`.
+- **Navbar:** `bg-primary text-primary-content border-b-2 border-secondary min-h-[72px]`.
 - **Catalog Search Layout:** Two-column grid on desktop (`lg:grid-cols-[280px_1fr] gap-6`). Left sidebar (`280px`) holds faceted filters using DaisyUI `checkbox checkbox-primary checkbox-sm`; collapsible into a DaisyUI `drawer` on mobile.
 - **Buttons & Inputs Alignment:** Standard interactive controls must use default `md` sizing (`h-10` / `40px`). Hero OPAC search bar uses `input-lg` + `btn-lg` (`h-12` / `48px`).
