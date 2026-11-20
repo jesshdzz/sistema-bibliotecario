@@ -1,3 +1,5 @@
+import { Children } from "react";
+
 export function Tabla({
   columnas,
   children,
@@ -5,6 +7,13 @@ export function Tabla({
   columnas: string[];
   children: React.ReactNode;
 }) {
+  if (Children.count(children) === 0) {
+    return (
+      <p className="tarjeta p-6 text-base-content/70">
+        No hay registros que mostrar.
+      </p>
+    );
+  }
   return (
     <div className="tarjeta overflow-x-auto">
       <table className="table">
