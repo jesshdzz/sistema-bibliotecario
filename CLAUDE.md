@@ -40,8 +40,8 @@ Drizzle: after changing `src/db/schema/`, run `pnpm db:generate` and commit the 
 
 - `src/db/index.ts`: Drizzle client with singleton pool (reused in dev via `globalThis`)
 - `src/db/schema/auth.ts`: better-auth tables + relations (generated, do not edit by hand)
-- `src/db/schema/dominio.ts`: initial library domain—titulo (books), ejemplar (copies, with a unique `codigo_barras`), prestamo (loans, with partial unique index: one live loan per user), prestamoItem (copies in a loan, with partial unique index: one live item per copy), parametro (config). It is a minimal starting point: `docs/spec/01-dominio.md` lists what changes (22-field titulo, `numero_utm` instead of `codigo_barras`, categories, user profile, sanctions, audit log)
-- Enums: tipoMaterial, estadoEjemplar, modalidadPrestamo, estadoPrestamo
+- `src/db/schema/dominio.ts`: library domain per `docs/spec/01-dominio.md`: categoria and catalogo_valor (editable catalogues), titulo (22-field MARC-style record, immutable system-generated `numero_ficha`, LCC with a sort key) with titulo_materia, ejemplar (copies, `numero_utm` unique among non-`baja` copies via partial index, baja metadata checked), perfil_usuario (role, user type, student data), prestamo (loans with `folio`, partial unique index: one live loan per user), prestamoItem (copies in a loan, partial unique index: one live item per copy, return condition), parametro (config), bitacora (audit log). Sanctions are not modelled yet
+- Enums: tipoMaterial, estadoEjemplar, modalidadPrestamo, estadoPrestamo, tipoAutor, rolUsuario, tipoUsuario, estatusPadron, condicionDevolucion
 
 **App** (`src/app/`): Next.js App Router, mostly scaffolded.
 
