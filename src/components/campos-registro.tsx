@@ -31,12 +31,12 @@ export function CamposRegistro({ dominios }: { dominios: Dominios }) {
           ))}
         </div>
       </Campo>
-      {tipo !== "publico" && (
+      {/* {tipo !== "publico" && (
         <p className="mt-2 text-sm text-base-content/70">
-          Usa tu correo institucional (
-          {dominios[tipo].map((d) => `@${d}`).join(" o ")}).
+          Tus datos se validan en ventanilla, mientras tanto tu cuenta es de
+          tipo público (No puedes pedir préstamos para domicilo).
         </p>
-      )}
+      )} */}
       {tipo === "alumno" && (
         <>
           <Campo etiqueta="Matrícula">
@@ -77,10 +77,23 @@ export function CamposRegistro({ dominios }: { dominios: Dominios }) {
           />
         </Campo>
       )}
+      <Campo etiqueta="Correo electrónico">
+        <input
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          placeholder={
+            tipo !== "publico" ? "nombre@gs.utm.mx" : "correo@email.com"
+          }
+          className="input w-full"
+        />
+      </Campo>
+
       {tipo !== "publico" && (
         <p className="mt-2 text-sm text-base-content/70">
-          Tus datos se validan en ventanilla; mientras tanto tu cuenta es de
-          tipo público (No puedes pedir préstamos para domicilo).
+          Usa tu correo institucional (
+          {dominios[tipo].map((d) => `@${d}`).join(" o ")}).
         </p>
       )}
     </>

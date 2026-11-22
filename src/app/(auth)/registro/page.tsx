@@ -25,16 +25,9 @@ export default async function Registro() {
             className="input w-full"
           />
         </Campo>
-        <Campo etiqueta="Correo electrónico">
-          <input
-            type="email"
-            name="email"
-            required
-            autoComplete="email"
-            placeholder="nombre@utm.mx"
-            className="input w-full"
-          />
-        </Campo>
+
+        <CamposRegistro dominios={dominios} />
+
         <Campo etiqueta="Contraseña">
           <input
             type="password"
@@ -55,7 +48,6 @@ export default async function Registro() {
             className="input w-full"
           />
         </Campo>
-        <CamposRegistro dominios={dominios} />
       </FormularioAuth>
       <p className="text-sm text-center mt-6">
         ¿Ya tienes cuenta?{" "}
