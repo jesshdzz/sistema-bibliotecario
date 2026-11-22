@@ -29,6 +29,13 @@
       "when": 1795192034899,
       "tag": "0003_numero_ficha_inmutable",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795311152845,
+      "tag": "0004_mushy_scrambler",
+      "breakpoints": true
     }
   ]
 }
