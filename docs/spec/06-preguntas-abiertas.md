@@ -10,7 +10,7 @@ Cada pregunta trae una **propuesta por defecto** para poder avanzar sin inventar
 
 **Q11. Idiomas y países: lista cerrada con códigos MARC o texto libre.** Por defecto: catálogos editables, sin códigos.
 
-**Q12. ¿Quién puede configurar: los tres bibliotecarios o solo un administrador de biblioteca?** Por defecto: todos los bibliotecarios.
+**Q12. ¿Quién puede configurar: los tres bibliotecarios o solo el administrador?** Por defecto: todos los bibliotecarios (el rol administrador, único, puede además operar el sistema).
 
 **Q13. Informes: lista exacta de estadísticas y plantilla de impresión del inventario (encabezado, logotipo).** Por defecto: los de `04-informes-configuracion.md`.
 
@@ -36,12 +36,18 @@ Cada pregunta trae una **propuesta por defecto** para poder avanzar sin inventar
 
 **Q24. ¿Se ofrece también el inicio de sesión con Google?** No se confirmó el acceso solo con Google Workspace y habrá usuarios externos. Por defecto: solo correo y contraseña; Google como método adicional queda fuera hasta decidirlo.
 
-**Q25. ¿Cómo se acredita que un usuario es alumno o docente?** Por defecto: todo registro nuevo es público; el bibliotecario valida la credencial en ventanilla (o el correo institucional contra el padrón) y cambia el tipo de usuario.
+**Q25. ¿Cómo se acredita que un usuario es alumno o trabajador?** Por defecto: el registro declara el tipo y los datos, pero la cuenta es pública hasta que el bibliotecario valide la credencial en ventanilla (o el correo institucional contra el padrón) y cambie el tipo de usuario. Pendiente de confirmar con el cliente; el mecanismo ya está decidido (2026-11-21).
 
 ## Resueltas
 
 | Fecha | Pregunta | Respuesta |
 |---|---|---|
+| 2026-11-21 | Roles | `usuario`, `bibliotecario`, `administrador` (administrador de biblioteca y técnico juntos) y `consulta` (Vicerrectoría, solo lectura de informes agregados); `alumno` pasa a `usuario` |
+| 2026-11-21 | Tipos de usuario | `alumno`, `trabajador` (antes `docente`) y `publico`; un bibliotecario tiene rol bibliotecario y tipo trabajador |
+| 2026-11-21 | Perfil de usuario | Se elimina `perfil_usuario`: sus datos son columnas de `user` (`additionalFields` de Better Auth) para que el registro sea un solo INSERT atómico |
+| 2026-11-21 | Registro | La persona elige Alumno, Trabajador o Externo y declara matrícula, carrera y semestre, o número de trabajador; la cuenta sigue como público y lo declarado se guarda en `tipo_solicitado` hasta la validación del bibliotecario (RF-57). La carrera es texto libre |
+| 2026-11-21 | Q25. Validación previa al registro | Mientras no haya padrón, el correo institucional es la única validación previa: alumno `@gs.utm.mx`, trabajador `@gs.utm.mx` o `@mixteco.utm.mx`, externo cualquiera (parámetros `registro.dominios_*`) |
+| 2026-11-21 | Q12 | Un solo rol `administrador` |
 | 2026-11-20 | Q18. Acceso de emergencia si Google falla | Ya no aplica: el inicio de sesión es propio y no depende de Google |
 | 2026-11-19 | Formato de los registros bibliográficos | MARC 21, solo como estructura (Q08) |
 | 2026-11-19 | Sistema de clasificación | LCC, asignada a mano |

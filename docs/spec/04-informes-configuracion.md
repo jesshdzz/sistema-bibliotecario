@@ -46,9 +46,11 @@ Valores por defecto tomados de las respuestas de la universidad. "Por definir" s
 | `sancion.llamados_para_sancion` | 3 | P10 |
 | `sancion.multas_activas` | verdadero (la universidad evalúa eliminarlas) | P11 |
 | `sancion.tabla` | por definir (tabla del reglamento por tipo de usuario y modalidad) | P11 |
+| `registro.dominios_alumno` | `["gs.utm.mx"]` | Decisión 2026-11-21 (sin padrón aún) |
+| `registro.dominios_trabajador` | `["gs.utm.mx", "mixteco.utm.mx"]` | Decisión 2026-11-21 (sin padrón aún) |
 | `biblioteca.horario` | lunes a viernes 07:00 a 20:00 | P3 |
 | `biblioteca.dias_no_habiles` | calendario por definir (suspensiones, feriados) | P7 |
-| `usuarios.modalidades_por_tipo` | alumno, docente, administrativo: casa, fotocopia, sala; público: sala y fotocopia | P1 |
+| `usuarios.modalidades_por_tipo` | alumno, trabajador: casa, fotocopia, sala; público: sala y fotocopia | P1 |
 | `utm.prefijo`, `utm.longitud`, `utm.reutilizar_libres` | formato por definir; `reutilizar_libres` = verdadero | Q01, Q02 |
 | `formulario.campos_obligatorios` | título, categoría y un ejemplar (propuesta) | Q10 |
 | `informes.encabezado` | nombre de la institución y logotipo; por definir | Q13 |
@@ -61,6 +63,6 @@ Catálogos iniciales:
 | Idiomas | Español, inglés y los que use la biblioteca; por definir | Q11 |
 | Países | Lista de países; por definir si con códigos MARC | Q11 |
 | Motivos de baja | Extravío, deterioro, donación (del informe; por confirmar) | Baja con historial |
-| Tipos de usuario | Alumno, docente, administrativo, público | P1 |
+| Tipos de usuario | Alumno, trabajador, público | P1 |
 
 Cualquier regla nueva que mencione el cliente entra aquí primero como parámetro o catálogo, y recién después como código.
