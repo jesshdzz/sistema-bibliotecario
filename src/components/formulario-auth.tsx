@@ -58,7 +58,7 @@ export function FormularioAuth({
   }
 
   return (
-    <form onSubmit={enviar}>
+    <form onSubmit={enviar} onChange={() => setError(undefined)}>
       {children}
       {error && (
         <div role="alert" className="alert alert-error mt-4">

@@ -41,9 +41,9 @@ export function CamposRegistro({
         </div>
       </Campo>
       {tipo !== "publico" && (
-        <p className="mt-2 text-sm text-base-content/70">
+        <p className="my-2 text-sm text-base-content/70">
           Tus datos se validan en ventanilla, mientras tanto tu cuenta es de
-          tipo público (No puedes pedir préstamos para domicilo).
+          tipo público (No puedes pedir préstamos para domicilio).
         </p>
       )}
       {tipo === "alumno" && (
@@ -123,7 +123,7 @@ export function CamposRegistro({
       </Campo>
 
       {tipo !== "publico" && (
-        <p className="mt-2 text-sm text-base-content/70">
+        <p className="my-2 text-sm text-base-content/70">
           Usa tu correo institucional (
           {dominios[tipo].map((d) => `@${d}`).join(" o ")}).
         </p>
