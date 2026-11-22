@@ -14,6 +14,7 @@ export const usuarioSesion = cache(async (): Promise<Usuario | undefined> => {
     matricula: user.matricula ?? "",
     carrera: user.carrera ?? "",
     rol: user.rol,
+    semestre: user.semestre ?? 0,
   };
 });
 

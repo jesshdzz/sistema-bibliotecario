@@ -49,6 +49,7 @@ export type Usuario = {
   matricula: string;
   carrera: string;
   rol: string;
+  semestre: number;
 };
 
 export type Prestamo = {

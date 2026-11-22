@@ -5,22 +5,27 @@ const dominios = {
   alumno: ["gs.utm.mx"],
   trabajador: ["gs.utm.mx", "mixteco.utm.mx"],
 };
+const carreras = {
+  ICO: { etiqueta: "Ingeniería en Computación", semestreMax: 10 },
+  POS: { etiqueta: "Posgrado", semestreMax: 4 },
+};
+const ctx = { dominios, carreras };
 const email = "a@gs.utm.mx";
 
 const alumno = {
   email,
   tipoSolicitado: "alumno",
   matricula: " 2021001101 ",
-  carrera: "Computación",
+  carrera: "ICO",
   semestre: 5,
 };
 
 test("alumno completo: recorta espacios", () => {
-  expect(datosRegistro(alumno, dominios)).toEqual({
+  expect(datosRegistro(alumno, ctx)).toEqual({
     datos: {
       tipoSolicitado: "alumno",
       matricula: "2021001101",
-      carrera: "Computación",
+      carrera: "ICO",
       semestre: 5,
       numeroTrabajador: null,
     },
@@ -28,20 +33,33 @@ test("alumno completo: recorta espacios", () => {
 });
 
 test("alumno sin matrícula falla", () => {
-  expect(
-    datosRegistro({ ...alumno, matricula: "  " }, dominios),
-  ).toHaveProperty("error");
-});
-
-test("semestre 0 falla", () => {
-  expect(datosRegistro({ ...alumno, semestre: 0 }, dominios)).toHaveProperty(
+  expect(datosRegistro({ ...alumno, matricula: "  " }, ctx)).toHaveProperty(
     "error",
   );
 });
 
+test("semestre 0 falla", () => {
+  expect(datosRegistro({ ...alumno, semestre: 0 }, ctx)).toHaveProperty(
+    "error",
+  );
+});
+
+test("carrera y semestre contra el catálogo", () => {
+  const con = (carrera: string, semestre: number) =>
+    datosRegistro({ ...alumno, carrera, semestre }, ctx);
+  expect(con("XXX", 1)).toEqual({ error: "Elige una carrera válida." });
+  expect(con("toString", 1)).toHaveProperty("error");
+  expect(con("POS", 5)).toEqual({
+    error: "El semestre debe estar entre 1 y 4.",
+  });
+  expect(con("POS", 4)).toHaveProperty("datos");
+  expect(con("ICO", 10)).toHaveProperty("datos");
+  expect(con("ICO", 11)).toHaveProperty("error");
+});
+
 test("trabajador sin número falla; con número descarta datos de alumno", () => {
   expect(
-    datosRegistro({ tipoSolicitado: "trabajador", email }, dominios),
+    datosRegistro({ tipoSolicitado: "trabajador", email }, ctx),
   ).toHaveProperty("error");
   expect(
     datosRegistro(
@@ -50,7 +68,7 @@ test("trabajador sin número falla; con número descarta datos de alumno", () =>
         tipoSolicitado: "trabajador",
         numeroTrabajador: "T-9",
       },
-      dominios,
+      ctx,
     ),
   ).toEqual({
     datos: {
@@ -70,12 +88,10 @@ test("público (o ausente) descarta campos extra", () => {
     semestre: null,
     numeroTrabajador: null,
   };
-  expect(
-    datosRegistro({ ...alumno, tipoSolicitado: "publico" }, dominios),
-  ).toEqual({
+  expect(datosRegistro({ ...alumno, tipoSolicitado: "publico" }, ctx)).toEqual({
     datos: { tipoSolicitado: "publico", ...vacio },
   });
-  expect(datosRegistro({ matricula: "x" }, dominios)).toEqual({
+  expect(datosRegistro({ matricula: "x" }, ctx)).toEqual({
     datos: { tipoSolicitado: "publico", ...vacio },
   });
 });
@@ -83,7 +99,7 @@ test("público (o ausente) descarta campos extra", () => {
 const ok = (tipoSolicitado: string, email: string, extra = {}) =>
   datosRegistro(
     { ...alumno, tipoSolicitado, numeroTrabajador: "T-9", email, ...extra },
-    dominios,
+    ctx,
   );
 
 test("correo institucional según tipo", () => {

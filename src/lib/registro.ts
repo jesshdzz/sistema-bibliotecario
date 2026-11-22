@@ -13,9 +13,7 @@ const registroSchema = z.discriminatedUnion("tipoSolicitado", [
     carrera: texto("La carrera es obligatoria."),
     semestre: z
       .number({ error: "El semestre es obligatorio." })
-      .int("El semestre debe ser un número entero.")
-      .min(1, "El semestre debe ser 1 o mayor.")
-      .max(10, "El semestre debe ser menor o igual a 10."),
+      .int("El semestre debe ser un número entero."),
   }),
   z.object({
     tipoSolicitado: z.literal("trabajador"),
@@ -32,17 +30,31 @@ const VACIO = {
 };
 
 export type Dominios = { alumno: string[]; trabajador: string[] };
+export type Carreras = Record<
+  string,
+  { etiqueta: string; semestreMax: number }
+>;
 
 // Valida lo declarado en el registro y descarta lo que no corresponde al tipo.
 export function datosRegistro(
   entrada: Record<string, unknown>,
-  dominios: Dominios,
+  { dominios, carreras }: { dominios: Dominios; carreras: Carreras },
 ) {
   const r = registroSchema.safeParse({
     ...entrada,
     tipoSolicitado: entrada.tipoSolicitado ?? "publico",
   });
   if (!r.success) return { error: r.error.issues[0].message };
+  if (r.data.tipoSolicitado === "alumno") {
+    const carrera = Object.hasOwn(carreras, r.data.carrera)
+      ? carreras[r.data.carrera]
+      : undefined;
+    if (!carrera) return { error: "Elige una carrera válida." };
+    if (r.data.semestre < 1 || r.data.semestre > carrera.semestreMax)
+      return {
+        error: `El semestre debe estar entre 1 y ${carrera.semestreMax}.`,
+      };
+  }
   const permitidos =
     r.data.tipoSolicitado === "publico"
       ? null

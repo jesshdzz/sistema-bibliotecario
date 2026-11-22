@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { db, schema } from "@/db";
+import { getCarreras } from "./carreras";
 import { getParametro } from "./parametros";
 import { datosRegistro } from "./registro";
 
@@ -44,8 +45,11 @@ export const auth = betterAuth({
       create: {
         before: async (user) => {
           const r = datosRegistro(user, {
-            alumno: await getParametro("registro.dominios_alumno"),
-            trabajador: await getParametro("registro.dominios_trabajador"),
+            dominios: {
+              alumno: await getParametro("registro.dominios_alumno"),
+              trabajador: await getParametro("registro.dominios_trabajador"),
+            },
+            carreras: await getCarreras(),
           });
           if ("error" in r)
             throw new APIError("BAD_REQUEST", {
