@@ -31,12 +31,12 @@ export function CamposRegistro({ dominios }: { dominios: Dominios }) {
           ))}
         </div>
       </Campo>
-      {/* {tipo !== "publico" && (
+      {tipo !== "publico" && (
         <p className="mt-2 text-sm text-base-content/70">
           Tus datos se validan en ventanilla, mientras tanto tu cuenta es de
           tipo público (No puedes pedir préstamos para domicilo).
         </p>
-      )} */}
+      )}
       {tipo === "alumno" && (
         <>
           <Campo etiqueta="Matrícula">
