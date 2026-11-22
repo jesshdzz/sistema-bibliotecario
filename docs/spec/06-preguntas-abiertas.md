@@ -45,7 +45,8 @@ Cada pregunta trae una **propuesta por defecto** para poder avanzar sin inventar
 | 2026-11-21 | Roles | `usuario`, `bibliotecario`, `administrador` (administrador de biblioteca y técnico juntos) y `consulta` (Vicerrectoría, solo lectura de informes agregados); `alumno` pasa a `usuario` |
 | 2026-11-21 | Tipos de usuario | `alumno`, `trabajador` (antes `docente`) y `publico`; un bibliotecario tiene rol bibliotecario y tipo trabajador |
 | 2026-11-21 | Perfil de usuario | Se elimina `perfil_usuario`: sus datos son columnas de `user` (`additionalFields` de Better Auth) para que el registro sea un solo INSERT atómico |
-| 2026-11-21 | Registro | La persona elige Alumno, Trabajador o Externo y declara matrícula, carrera y semestre, o número de trabajador; la cuenta sigue como público y lo declarado se guarda en `tipo_solicitado` hasta la validación del bibliotecario (RF-57). La carrera es texto libre |
+| 2026-11-21 | Registro | La persona elige Alumno, Trabajador o Externo y declara matrícula, carrera y semestre, o número de trabajador; la cuenta sigue como público y lo declarado se guarda en `tipo_solicitado` hasta la validación del bibliotecario (RF-57). La carrera se elige de un catálogo y el semestre máximo depende de la carrera |
+| 2026-11-21 | Carreras en el registro | Catálogo editable `carrera` en `catalogo_valor` (se guarda el código); semestre máximo por carrera en el parámetro `registro.semestre_max` (10 por defecto, Posgrado 4) |
 | 2026-11-21 | Q25. Validación previa al registro | Mientras no haya padrón, el correo institucional es la única validación previa: alumno `@gs.utm.mx`, trabajador `@gs.utm.mx` o `@mixteco.utm.mx`, externo cualquiera (parámetros `registro.dominios_*`) |
 | 2026-11-21 | Q12 | Un solo rol `administrador` |
 | 2026-11-20 | Q18. Acceso de emergencia si Google falla | Ya no aplica: el inicio de sesión es propio y no depende de Google |
