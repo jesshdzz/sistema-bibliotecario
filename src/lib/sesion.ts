@@ -1,9 +1,21 @@
+import { headers } from "next/headers";
+import { cache } from "react";
+import { auth } from "./auth";
 import type { Usuario } from "./biblioteca";
 
-// shortcut: sin autenticación hasta conectar better-auth (src/lib/auth.ts)
-export async function usuarioSesion(): Promise<Usuario | undefined> {
-  return undefined;
-}
+export const usuarioSesion = cache(async (): Promise<Usuario | undefined> => {
+  const sesion = await auth.api.getSession({ headers: await headers() });
+  if (!sesion) return undefined;
+  const { user } = sesion;
+  return {
+    id: user.id,
+    nombre: user.name,
+    correo: user.email,
+    matricula: user.matricula ?? "",
+    carrera: user.carrera ?? "",
+    rol: user.rol,
+  };
+});
 
-// shortcut: nadie es personal hasta que existan roles en la BD
-export const esPersonal = (_usuario?: Usuario) => false;
+export const esPersonal = (usuario?: Usuario) =>
+  !!usuario && usuario.rol !== "usuario";
