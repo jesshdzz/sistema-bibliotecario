@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Campo } from "@/components/campo";
 import { CamposRegistro } from "@/components/campos-registro";
 import { FormularioAuth } from "@/components/formulario-auth";
+import { getCarreras } from "@/lib/carreras";
 import { getParametro } from "@/lib/parametros";
 
 export default async function Registro() {
@@ -26,7 +27,7 @@ export default async function Registro() {
           />
         </Campo>
 
-        <CamposRegistro dominios={dominios} />
+        <CamposRegistro dominios={dominios} carreras={await getCarreras()} />
 
         <Campo etiqueta="Contraseña">
           <input

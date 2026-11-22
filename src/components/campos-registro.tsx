@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Campo } from "@/components/campo";
-import type { Dominios } from "@/lib/registro";
+import type { Carreras, Dominios } from "@/lib/registro";
 
 const TIPOS = [
   ["alumno", "Alumno"],
@@ -10,8 +10,17 @@ const TIPOS = [
   ["publico", "Externo"],
 ] as const;
 
-export function CamposRegistro({ dominios }: { dominios: Dominios }) {
+export function CamposRegistro({
+  dominios,
+  carreras,
+}: {
+  dominios: Dominios;
+  carreras: Carreras;
+}) {
   const [tipo, setTipo] = useState<(typeof TIPOS)[number][0]>("publico");
+  const [carrera, setCarrera] = useState("");
+  const [semestre, setSemestre] = useState("");
+  const semestreMax = carreras[carrera]?.semestreMax ?? 0;
 
   return (
     <>
@@ -48,22 +57,45 @@ export function CamposRegistro({ dominios }: { dominios: Dominios }) {
             />
           </Campo>
           <Campo etiqueta="Carrera">
-            <input
-              type="text"
+            <select
               name="carrera"
               required
-              className="input w-full"
-            />
+              value={carrera}
+              onChange={(e) => {
+                setCarrera(e.target.value);
+                if (Number(semestre) > carreras[e.target.value].semestreMax)
+                  setSemestre("");
+              }}
+              className="select w-full"
+            >
+              <option value="" disabled>
+                Elige tu carrera
+              </option>
+              {Object.entries(carreras).map(([codigo, { etiqueta }]) => (
+                <option key={codigo} value={codigo}>
+                  {etiqueta}
+                </option>
+              ))}
+            </select>
           </Campo>
           <Campo etiqueta="Semestre">
-            <input
-              type="number"
+            <select
               name="semestre"
               required
-              min={1}
-              step={1}
-              className="input w-full"
-            />
+              disabled={!carrera}
+              value={semestre}
+              onChange={(e) => setSemestre(e.target.value)}
+              className="select w-full"
+            >
+              <option value="" disabled>
+                Elige tu semestre
+              </option>
+              {Array.from({ length: semestreMax }, (_, i) => i + 1).map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
           </Campo>
         </>
       )}
