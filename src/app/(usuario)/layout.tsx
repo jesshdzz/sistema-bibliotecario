@@ -7,10 +7,10 @@ export default function UsuarioLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex flex-1 flex-col">
       <Navbar />
       {children}
       <Footer />
-    </>
+    </div>
   );
 }

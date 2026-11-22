@@ -41,7 +41,7 @@ export default async function AdminLayout({
   if (!esPersonal(usuario)) redirect("/iniciar-sesion");
 
   return (
-    <>
+    <div className="flex flex-1 flex-col">
       <Navbar />
       <div className="contenedor flex-1 py-8">
         <PanelLateral
@@ -79,6 +79,6 @@ export default async function AdminLayout({
         </PanelLateral>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
