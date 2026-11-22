@@ -1,18 +1,61 @@
-import { relations } from "drizzle-orm";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import {
+  boolean,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const rolUsuario = pgEnum("rol_usuario", [
+  "usuario",
+  "bibliotecario",
+  "administrador",
+  "consulta",
+]);
+
+export const tipoUsuario = pgEnum("tipo_usuario", [
+  "alumno",
+  "trabajador",
+  "publico",
+]);
+
+export const estatusPadron = pgEnum("estatus_padron", ["activo", "baja"]);
+
+export const user = pgTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified").default(false).notNull(),
+    image: text("image"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    rol: rolUsuario("rol").default("usuario").notNull(),
+    tipoUsuario: tipoUsuario("tipo_usuario").default("publico").notNull(),
+    tipoSolicitado: tipoUsuario("tipo_solicitado").default("publico").notNull(),
+    matricula: text("matricula"),
+    carrera: text("carrera"),
+    semestre: integer("semestre"),
+    numeroTrabajador: text("numero_trabajador"),
+    estatus: estatusPadron("estatus"),
+  },
+  (table) => [
+    uniqueIndex("user_matricula_alumno_uidx")
+      .on(table.matricula)
+      .where(sql`${table.tipoUsuario} = 'alumno'`),
+    uniqueIndex("user_numero_trabajador_uidx")
+      .on(table.numeroTrabajador)
+      .where(sql`${table.tipoUsuario} = 'trabajador'`),
+  ],
+);
 
 export const session = pgTable(
   "session",
