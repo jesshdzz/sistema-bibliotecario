@@ -1,4 +1,4 @@
-import type { EstadoEjemplar, EstadoPrestamo } from "@/lib/datos-demo";
+import type { EstadoEjemplar, EstadoPrestamo } from "@/lib/biblioteca";
 
 // accent = disponible, error = no disponible/vencido,
 // warning = requiere atención, success = préstamo en regla, info = en trámite.

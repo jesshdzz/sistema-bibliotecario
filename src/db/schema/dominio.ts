@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   index,
+  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -42,22 +43,121 @@ export const estadoPrestamo = pgEnum("estado_prestamo", [
   "cancelado",
 ]);
 
+export const tipoAutor = pgEnum("tipo_autor", [
+  "personal",
+  "corporativo",
+  "congreso",
+]);
+
+export const rolUsuario = pgEnum("rol_usuario", [
+  "alumno",
+  "bibliotecario",
+  "administrador_biblioteca",
+  "consulta",
+  "administrador_tecnico",
+]);
+
+export const tipoUsuario = pgEnum("tipo_usuario", [
+  "alumno",
+  "docente",
+  "publico",
+]);
+
+export const estatusPadron = pgEnum("estatus_padron", ["activo", "baja"]);
+
+export const condicionDevolucion = pgEnum("condicion_devolucion", [
+  "bueno",
+  "danado",
+]);
+
+export const categoria = pgTable("categoria", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nombre: text("nombre").notNull().unique(),
+  permiteDomicilio: boolean("permite_domicilio").notNull().default(true),
+  permiteFotocopia: boolean("permite_fotocopia").notNull().default(true),
+  orden: integer("orden").notNull().default(0),
+  activa: boolean("activa").notNull().default(true),
+});
+
+export const catalogoValor = pgTable(
+  "catalogo_valor",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    catalogo: text("catalogo").notNull(),
+    codigo: text("codigo").notNull(),
+    etiqueta: text("etiqueta").notNull(),
+    activo: boolean("activo").notNull().default(true),
+    orden: integer("orden").notNull().default(0),
+  },
+  (t) => [
+    uniqueIndex("catalogo_valor_catalogo_codigo").on(t.catalogo, t.codigo),
+  ],
+);
+
 export const titulo = pgTable(
   "titulo",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     isbn: text("isbn").unique(),
     titulo: text("titulo").notNull(),
-    autores: text("autores"),
     editorial: text("editorial"),
-    anio: text("anio"),
-    tipo: tipoMaterial("tipo").notNull().default("libro"),
-    clasificacion: text("clasificacion"),
+    tipo: tipoMaterial("tipo"),
+    numeroFicha: integer("numero_ficha")
+      .notNull()
+      .generatedAlwaysAsIdentity()
+      .unique(),
+    categoriaId: uuid("categoria_id")
+      .notNull()
+      .references(() => categoria.id, { onDelete: "restrict" }),
+    autorPrincipal: text("autor_principal"),
+    tipoAutor: tipoAutor("tipo_autor"),
+    mencionResponsabilidad: text("mencion_responsabilidad"),
+    edicion: text("edicion"),
+    lugarPublicacion: text("lugar_publicacion"),
+    paisPublicacion: text("pais_publicacion"),
+    idioma: text("idioma"),
+    fechaPublicacion: text("fecha_publicacion"),
+    pieImprenta: text("pie_imprenta"),
+    descripcionFisica: text("descripcion_fisica"),
+    coleccionSerie: text("coleccion_serie"),
+    notasGenerales: text("notas_generales"),
+    notasContenido: text("notas_contenido"),
+    notasTesis: text("notas_tesis"),
+    contenido: text("contenido"),
+    esTesis: boolean("es_tesis").notNull().default(false),
+    clasificacionLcc: text("clasificacion_lcc"),
+    clasificacionLccOrden: text("clasificacion_lcc_orden"),
+    capturadoPor: text("capturado_por").references(() => user.id, {
+      onDelete: "set null",
+    }),
     creadoEn: timestamp("creado_en", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    actualizadoEn: timestamp("actualizado_en", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
-  (t) => [index("titulo_titulo_idx").on(t.titulo)],
+  (t) => [
+    index("titulo_titulo_idx").on(t.titulo),
+    index("titulo_categoria_idx").on(t.categoriaId),
+    index("titulo_lcc_orden_idx").on(t.clasificacionLccOrden),
+  ],
+);
+
+export const tituloMateria = pgTable(
+  "titulo_materia",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tituloId: uuid("titulo_id")
+      .notNull()
+      .references(() => titulo.id, { onDelete: "cascade" }),
+    materia: text("materia").notNull(),
+  },
+  (t) => [
+    uniqueIndex("titulo_materia_unica").on(t.tituloId, t.materia),
+    index("titulo_materia_materia_idx").on(t.materia),
+  ],
 );
 
 export const ejemplar = pgTable(
@@ -67,25 +167,70 @@ export const ejemplar = pgTable(
     tituloId: uuid("titulo_id")
       .notNull()
       .references(() => titulo.id, { onDelete: "restrict" }),
-    codigoBarras: text("codigo_barras").notNull().unique(),
+    numeroUtm: text("numero_utm").notNull(),
+    volumen: text("volumen"),
+    copia: text("copia"),
     estado: estadoEjemplar("estado").notNull().default("disponible"),
+    capturadoPor: text("capturado_por").references(() => user.id, {
+      onDelete: "set null",
+    }),
+    bajaEn: timestamp("baja_en", { withTimezone: true }),
+    motivoBaja: text("motivo_baja"),
     creadoEn: timestamp("creado_en", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    actualizadoEn: timestamp("actualizado_en", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
-  (t) => [index("ejemplar_titulo_idx").on(t.tituloId)],
+  (t) => [
+    index("ejemplar_titulo_idx").on(t.tituloId),
+    uniqueIndex("ejemplar_utm_vigente")
+      .on(t.numeroUtm)
+      .where(sql`${t.estado} <> 'baja'`),
+    check(
+      "ejemplar_baja_coherente",
+      sql`(${t.estado} = 'baja') = (${t.bajaEn} is not null and ${t.motivoBaja} is not null)`,
+    ),
+  ],
 );
+
+export const perfilUsuario = pgTable("perfil_usuario", {
+  usuarioId: text("usuario_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  rol: rolUsuario("rol").notNull().default("alumno"),
+  tipoUsuario: tipoUsuario("tipo_usuario").notNull().default("publico"),
+  matricula: text("matricula").unique(),
+  carrera: text("carrera"),
+  semestre: integer("semestre"),
+  estatus: estatusPadron("estatus"),
+  creadoEn: timestamp("creado_en", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  actualizadoEn: timestamp("actualizado_en", { withTimezone: true })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
 
 export const prestamo = pgTable(
   "prestamo",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    folio: integer("folio").notNull().generatedAlwaysAsIdentity().unique(),
     usuarioId: text("usuario_id")
       .notNull()
       .references(() => user.id, { onDelete: "restrict" }),
     modalidad: modalidadPrestamo("modalidad").notNull(),
     estado: estadoPrestamo("estado").notNull().default("pre_prestamo"),
     credencialRetenida: boolean("credencial_retenida").notNull().default(false),
+    limiteRecogida: timestamp("limite_recogida", { withTimezone: true }),
+    activadoEn: timestamp("activado_en", { withTimezone: true }),
+    atendidoPor: text("atendido_por").references(() => user.id, {
+      onDelete: "set null",
+    }),
     venceEn: timestamp("vence_en", { withTimezone: true }),
     creadoEn: timestamp("creado_en", { withTimezone: true })
       .notNull()
@@ -112,6 +257,8 @@ export const prestamoItem = pgTable(
       .references(() => ejemplar.id, { onDelete: "restrict" }),
     vivo: boolean("vivo").notNull().default(true),
     devueltoEn: timestamp("devuelto_en", { withTimezone: true }),
+    condicionDevolucion: condicionDevolucion("condicion_devolucion"),
+    notaDevolucion: text("nota_devolucion"),
   },
   (t) => [
     uniqueIndex("prestamo_item_un_vivo_por_ejemplar")
@@ -139,3 +286,25 @@ export const parametro = pgTable("parametro", {
     onDelete: "set null",
   }),
 });
+
+export const bitacora = pgTable(
+  "bitacora",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    usuarioId: text("usuario_id").references(() => user.id, {
+      onDelete: "set null",
+    }),
+    accion: text("accion").notNull(),
+    entidad: text("entidad").notNull(),
+    entidadId: text("entidad_id"),
+    antes: jsonb("antes"),
+    despues: jsonb("despues"),
+    creadoEn: timestamp("creado_en", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("bitacora_entidad_idx").on(t.entidad, t.entidadId),
+    index("bitacora_creado_en_idx").on(t.creadoEn),
+  ],
+);
