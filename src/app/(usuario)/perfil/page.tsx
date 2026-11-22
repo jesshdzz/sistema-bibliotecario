@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BotonCerrarSesion } from "@/components/boton-cerrar-sesion";
 import { Dato, Encabezado, Seccion } from "@/components/pagina";
 import { Papeleta } from "@/components/papeleta";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
@@ -21,11 +22,7 @@ export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
       <Encabezado
         titulo="Mi cuenta"
         descripcion="Tus datos y el seguimiento de tus préstamos."
-        accion={
-          <button type="button" className="btn btn-outline btn-sm">
-            Cerrar sesión
-          </button>
-        }
+        accion={<BotonCerrarSesion className="btn btn-outline btn-sm" />}
       />
 
       {solicitado && (
