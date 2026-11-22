@@ -35,11 +35,11 @@ export default async function Inicio() {
 
   return (
     <>
-      <section className="bg-neutral text-neutral-content">
+      <section className="bg-hero-background text-neutral-content">
         <div className="contenedor grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-[1fr_360px]">
           <div>
             <h1 className="max-w-[18ch] text-4xl font-bold leading-tight sm:text-5xl">
-              Busca en el acervo de la biblioteca
+              Busca en el catálogo bibliográfico
             </h1>
             <p className="mt-4 max-w-[56ch] text-lg text-neutral-content/80">
               Libros, revistas y artículos de la universidad. Solicita tu
