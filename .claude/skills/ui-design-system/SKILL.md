@@ -35,7 +35,7 @@ Configure fonts in `app/layout.tsx` via CSS variables (`--font-serif`, `--font-s
 - **`font-serif` (`Playfair Display`):**
   - **Allowed ONLY on:** Hero Display (`text-4xl` to `text-5xl`), Page Titles `<h1>` (`text-3xl`/`text-4xl`), Section Headings `<h2>` (`text-2xl`/`text-3xl`), and curated editorial quotes.
   - **Forbidden on:** Book titles inside search results, cards, tables, buttons, form labels, or numbers.
-- **`font-sans` (`Inter`):**
+- **`font-sans` (`Source Serif 4`, with the `opsz` axis):**
   - **Default for everything else:** Body text (`text-base` / `16px`, `leading-relaxed`), card titles (`text-lg font-semibold`), metadata (`text-sm`), navigation, buttons, and inputs.
 - **`font-mono` (`JetBrains Mono`):**
   - **Mandatory for:** Library Call Numbers / Signaturas topográficas (e.g., `QA76.73 .P98 2026`), ISBN/ISSN codes, loan folio IDs, and pagination counters (`text-[13px] font-medium`).
