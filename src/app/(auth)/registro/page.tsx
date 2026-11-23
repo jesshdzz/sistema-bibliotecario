@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { Campo } from "@/components/campo";
 import { CamposRegistro } from "@/components/campos-registro";
 import { FormularioAuth } from "@/components/formulario-auth";
@@ -6,6 +7,7 @@ import { getCarreras } from "@/lib/carreras";
 import { getParametro } from "@/lib/parametros";
 
 export default async function Registro() {
+  await connection();
   const dominios = {
     alumno: await getParametro("registro.dominios_alumno"),
     trabajador: await getParametro("registro.dominios_trabajador"),
