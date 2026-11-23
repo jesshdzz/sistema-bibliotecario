@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { CamposRegistro } from "@/components/campos-registro";
 import { FormularioAuth } from "@/components/formulario-auth";
 import { Campo, Entrada } from "@/components/ui/campo";
