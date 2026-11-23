@@ -95,7 +95,7 @@ export default function Estilos() {
               Playfair Display — Títulos editoriales
             </p>
             <p className="font-sans text-lg">
-              Inter — Texto de interfaz, cuerpo y metadatos de catálogo
+              Source Serif 4 — Texto de interfaz, cuerpo y metadatos de catálogo
             </p>
             <p className="font-mono text-sm">
               QA76.73 .P98 2026 — Signaturas topográficas · ISBN

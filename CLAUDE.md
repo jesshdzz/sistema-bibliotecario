@@ -85,5 +85,5 @@ Whenever you create, edit, or refactor any UI component, page, or layout, you MU
 ### Non-Negotiable UI Rules:
 
 1. **Zero Hardcoded Colors:** NEVER use Tailwind palette utilities like `bg-red-500`, `text-gray-800`, `border-slate-200`, or raw hex codes in JSX/TSX. Always use DaisyUI v5 semantic tokens (`bg-base-100`, `text-base-content`, `btn-primary`, `border-base-300`, etc.).
-2. **Typography Discipline:** `Playfair Display` (`font-serif`) is strictly forbidden for body copy, tables, inputs, buttons, and catalog metadata (ISBN, call numbers). Use `Inter` (`font-sans`) for UI/reading and `JetBrains Mono` (`font-mono`) for library classification codes.
+2. **Typography Discipline:** `Playfair Display` (`font-serif`) is strictly forbidden for body copy, tables, inputs, buttons, and catalog metadata (ISBN, call numbers). Use `Source Serif 4` (`font-sans`) for UI/reading and `JetBrains Mono` (`font-mono`) for library classification codes.
 3. **Theme Parity:** Every component must work seamlessly in both `biblioteca-light` and `biblioteca-dark` themes without manual `dark:` overrides.

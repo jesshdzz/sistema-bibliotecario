@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
+import {
+  JetBrains_Mono,
+  Playfair_Display,
+  Source_Serif_4,
+} from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -8,10 +12,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const inter = Inter({
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  axes: ["opsz"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -34,7 +39,7 @@ export default function RootLayout({
     <html
       lang="es"
       suppressHydrationWarning
-      className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${playfair.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <script
