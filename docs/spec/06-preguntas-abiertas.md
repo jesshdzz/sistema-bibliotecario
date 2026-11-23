@@ -10,8 +10,6 @@ Cada pregunta trae una **propuesta por defecto** para poder avanzar sin inventar
 
 **Q11. Idiomas y países: lista cerrada con códigos MARC o texto libre.** Por defecto: catálogos editables, sin códigos.
 
-**Q12. ¿Quién puede configurar: los tres bibliotecarios o solo el administrador?** Por defecto: todos los bibliotecarios (el rol administrador, único, puede además operar el sistema).
-
 **Q13. Informes: lista exacta de estadísticas y plantilla de impresión del inventario (encabezado, logotipo).** Por defecto: los de `04-informes-configuracion.md`.
 
 **Q14. ¿Una o varias categorías por título?** Por defecto: una.

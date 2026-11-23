@@ -21,17 +21,15 @@ Ver `CLAUDE.md`. Atención: "clasificación" se usa en dos sentidos en el lengua
 
 El esquema inicial está en `src/db/schema/` (`auth.ts` y `dominio.ts`). Este modelo es el diseño objetivo; los nombres y columnas se ajustan al implementar. El detalle de los campos del título está en `02-catalogo-busqueda.md`.
 
-### Esquema inicial existente y qué cambia
+### Estado del esquema (2026-11-22)
 
-| Elemento actual | Estado | Cambio |
-|---|---|---|
-| `auth.ts`: `user`, `session`, `account` (con `password`), `verification` | Generado por Better Auth | `account.password` ya permite correo y contraseña. Se edita a mano solo para las columnas de dominio de `user`, declaradas como `additionalFields` en `src/lib/auth.ts` |
-| `titulo`: `isbn`, `titulo`, `autores`, `editorial`, `anio`, `tipo` (libro, revista, artículo; obligatorio), `clasificacion` | Mínimo | Ampliar a los 22 campos con `numero_ficha` automático e inmutable, `categoria_id`, `clasificacion_lcc` y `clasificacion_lcc_orden`, `capturado_por`; `tipo` pasa a opcional (Q07) |
-| `ejemplar`: `codigo_barras` obligatorio y único, `estado` (disponible, apartado, prestado, en_sala, no_disponible, baja) | Mínimo | Sustituir `codigo_barras` por `numero_utm` (Q01), con índice único parcial `WHERE estado <> 'baja'` en lugar de la restricción única total (Q02); agregar `volumen`, `copia` y datos de baja |
-| `prestamo`: `usuario_id`, `modalidad` (domicilio, sala, fotocopia), `estado`, `credencial_retenida`, `vence_en`, `cerrado_en`; índice único parcial de un préstamo vivo por usuario | Sirve como base | Agregar folio, límite de recogida (30 min), activación y quién atendió; revisar `credencial_retenida` (por confirmar) |
-| `prestamo_item`: `vivo`, `devuelto_en`; índice único parcial de un ítem vivo por ejemplar y `check` de coherencia | Sirve como base | Agregar la condición del libro al devolverlo; el tope de 3 libros va en el servicio |
-| `parametro`: `clave`, `valor` (JSON), `descripcion`, `actualizado_en`, `actualizado_por` | Sirve como base | Agregar validación por clave (Zod) |
-| No existen | Nuevos | `categoria`, `catalogo_valor`, `titulo_materia`, `llamado_atencion`, `sancion`, `dia_no_habil`, `bitacora` |
+| Elemento | Estado |
+|---|---|
+| `user` con columnas de dominio (`additionalFields`), índices únicos parciales de matrícula (alumnos) y número de trabajador (trabajadores); `perfil_usuario` eliminada | Hecho |
+| `categoria`, `catalogo_valor` (con el catálogo `carrera` sembrado), `titulo` con los 22 campos y `numero_ficha` inmutable, `titulo_materia`, `ejemplar` con `numero_utm` y su índice parcial, `prestamo` con `folio` y `limite_recogida`, `prestamo_item` con condición de devolución, `parametro`, `bitacora` | Hecho |
+| Validación de `parametro` por clave con Zod (`src/lib/parametros.ts`) | Hecho para las claves `registro.*`; se agregan claves conforme se usan |
+| `llamado_atencion`, `sancion`, `dia_no_habil` | Pendiente |
+| Semilla de `categoria` y cuenta inicial del personal (administrador) | Pendiente |
 
 ### Modelo objetivo
 
