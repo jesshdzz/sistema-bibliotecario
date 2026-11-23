@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { esPersonal, usuarioSesion } from "@/lib/sesion";
 import { BotonCerrarSesion } from "./boton-cerrar-sesion";
@@ -20,21 +21,31 @@ export async function Navbar() {
     <header className="border-b-2 border-secondary bg-primary text-primary-content">
       <div className="contenedor flex min-h-18 items-center gap-3">
         <Link href="/" className="flex items-center gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-field border border-primary-content/40">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
+          {/*<svg
+            viewBox="0 0 48 48"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-12 shrink-0"
+            aria-hidden="true"
+          >
+            <g className="stroke-secondary" strokeWidth="2.5">
+              <path d="M5 24a19 17 0 0 1 38 0" />
+              <path d="M11.5 24a12.5 11 0 0 1 25 0" />
+            </g>
+            <path
+              d="M24 18.5l2.5 3.5-2.5 3.5-2.5-3.5z"
+              className="fill-secondary"
+            />
+            <path
+              d="M24 30c-4.5-2.5-10-3.2-16-3v12c6-.2 11.5.5 16 3 4.5-2.5 10-3.2 16-3V27c-6-.2-11.5.5-16 3zm0 0v12"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              className="size-6"
-              aria-hidden="true"
-            >
-              <path d="M12 6.5c-2-1.3-4.5-2-7.5-2v13c3 0 5.5.7 7.5 2m0-13c2-1.3 4.5-2 7.5-2v13c-3 0-5.5.7-7.5 2m0-13v13" />
-            </svg>
-          </span>
+              strokeWidth="2.5"
+            />
+          </svg> */}
+          <Image src="/master-1024.png" alt="" width={40} height={40} />
           <span className="leading-tight">
-            <span className="block text-lg font-semibold">
+            <span className="block text-xl font-semibold ">
               Biblioteca<span className="sm:hidden"> UTM</span>
             </span>
             <span className="hidden text-xs text-primary-content/80 sm:block">
