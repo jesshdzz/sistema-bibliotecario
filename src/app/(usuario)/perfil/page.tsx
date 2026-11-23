@@ -1,15 +1,20 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BotonCerrarSesion } from "@/components/boton-cerrar-sesion";
 import { Dato, Encabezado, Seccion } from "@/components/pagina";
 import { Papeleta } from "@/components/papeleta";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
 import { ESTADOS_VIVOS, type Prestamo, type Titulo } from "@/lib/biblioteca";
+import { getCarreras } from "@/lib/carreras";
 import { usuarioSesion } from "@/lib/sesion";
 
 export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
   const u = await usuarioSesion();
   if (!u) redirect("/iniciar-sesion");
-  const { solicitud } = await searchParams;
+  const [{ solicitud }, carreras] = await Promise.all([
+    searchParams,
+    getCarreras(),
+  ]);
   // shortcut: sin datos hasta conectar la base
   const titulos: Titulo[] = [];
   const mios: Prestamo[] = [];
@@ -21,11 +26,7 @@ export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
       <Encabezado
         titulo="Mi cuenta"
         descripcion="Tus datos y el seguimiento de tus préstamos."
-        accion={
-          <button type="button" className="btn btn-outline btn-sm">
-            Cerrar sesión
-          </button>
-        }
+        accion={<BotonCerrarSesion className="btn btn-outline btn-sm" />}
       />
 
       {solicitado && (
@@ -48,7 +49,10 @@ export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
             <Dato etiqueta="Correo">
               <span className="break-all">{u.correo}</span>
             </Dato>
-            <Dato etiqueta="Carrera">{u.carrera}</Dato>
+            <Dato etiqueta="Carrera">
+              {carreras[u.carrera]?.etiqueta ?? u.carrera}
+            </Dato>
+            <Dato etiqueta="Semestre">{u.semestre}</Dato>
           </dl>
         </aside>
 

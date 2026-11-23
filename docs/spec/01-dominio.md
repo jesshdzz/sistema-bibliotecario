@@ -4,15 +4,14 @@
 
 | Rol | Quién | Puede |
 |---|---|---|
-| Alumno | Alumnos activos del padrón | Buscar, ver fichas, solicitar préstamo, ver su historial y sanciones |
-| Docente / administrativo | Personal con matrícula de trabajador | Igual que el alumno (P1) |
-| Público | Cualquier persona registrada que no sea alumno ni personal, incluidos usuarios externos a la universidad | Solo uso en sala o fotocopia; no se llevan libros a casa (P1) |
-| Bibliotecario | 3 personas (P32) | Capturar y editar catálogo, operar ventanilla, sanciones, informes, configuración |
-| Administrador de biblioteca | Por definir (Q12) | Lo del bibliotecario más lo que se decida restringir |
+| Usuario | Cualquier persona registrada; lo que puede hacer depende de su **tipo de usuario** | Buscar, ver fichas, solicitar préstamo, ver su historial y sanciones |
+| Bibliotecario | 3 personas (P32); su tipo de usuario es trabajador | Capturar y editar catálogo, operar ventanilla, sanciones, informes, configuración |
+| Administrador | Administración de la biblioteca y técnico de la universidad (P30); un solo rol (Q12) | Lo del bibliotecario más la operación del sistema |
 | Consulta | Vicerrectoría | Solo lectura de informes agregados |
-| Administrador técnico | Técnico de la universidad (P30) | Operación del sistema |
 
-Acceso: registro e inicio de sesión normales, con correo y contraseña, como en cualquier sitio web; se permiten usuarios externos a la universidad (el acceso solo con Google Workspace no está confirmado y se descartó como requisito). Todo usuario nuevo queda como **público**; el bibliotecario lo cambia a alumno o docente al validar su credencial o contra el padrón (propuesta, Q25). El rol y el tipo de usuario se guardan en la base de datos y los asigna el personal, nunca el propio usuario. Sin SMTP por ahora (Q23): no se puede depender del correo para verificar la cuenta ni para restablecer la contraseña.
+El **tipo de usuario** es distinto del rol: `alumno` (alumno activo del padrón), `trabajador` (docente o administrativo con número de trabajador) y `publico` (cualquier otra persona, incluidos externos a la universidad). Alumno y trabajador piden libros en cualquier modalidad (P1); público solo uso en sala o fotocopia, no se lleva libros a casa (P1).
+
+Acceso: registro e inicio de sesión normales, con correo y contraseña, como en cualquier sitio web; se permiten usuarios externos a la universidad (el acceso solo con Google Workspace no está confirmado y se descartó como requisito). Al registrarse la persona elige Alumno, Trabajador o Externo y declara sus datos (alumno: matrícula, carrera y semestre; trabajador: número de trabajador; externo: ninguno). Lo declarado queda pendiente: la cuenta sigue como **público** y lo declarado se guarda en `tipo_solicitado` hasta que el bibliotecario valide la credencial o el padrón y cambie el tipo de usuario (Q25). El rol y el tipo de usuario se guardan en la base de datos y los asigna el personal, nunca el propio usuario. Sin SMTP por ahora (Q23): no se puede depender del correo para verificar la cuenta ni para restablecer la contraseña.
 
 ## Glosario
 
@@ -26,13 +25,13 @@ El esquema inicial está en `src/db/schema/` (`auth.ts` y `dominio.ts`). Este mo
 
 | Elemento actual | Estado | Cambio |
 |---|---|---|
-| `auth.ts`: `user`, `session`, `account` (con `password`), `verification` | Generado por Better Auth | No se edita a mano. `account.password` ya permite correo y contraseña. Los datos de dominio van en `perfil_usuario` |
+| `auth.ts`: `user`, `session`, `account` (con `password`), `verification` | Generado por Better Auth | `account.password` ya permite correo y contraseña. Se edita a mano solo para las columnas de dominio de `user`, declaradas como `additionalFields` en `src/lib/auth.ts` |
 | `titulo`: `isbn`, `titulo`, `autores`, `editorial`, `anio`, `tipo` (libro, revista, artículo; obligatorio), `clasificacion` | Mínimo | Ampliar a los 22 campos con `numero_ficha` automático e inmutable, `categoria_id`, `clasificacion_lcc` y `clasificacion_lcc_orden`, `capturado_por`; `tipo` pasa a opcional (Q07) |
 | `ejemplar`: `codigo_barras` obligatorio y único, `estado` (disponible, apartado, prestado, en_sala, no_disponible, baja) | Mínimo | Sustituir `codigo_barras` por `numero_utm` (Q01), con índice único parcial `WHERE estado <> 'baja'` en lugar de la restricción única total (Q02); agregar `volumen`, `copia` y datos de baja |
 | `prestamo`: `usuario_id`, `modalidad` (domicilio, sala, fotocopia), `estado`, `credencial_retenida`, `vence_en`, `cerrado_en`; índice único parcial de un préstamo vivo por usuario | Sirve como base | Agregar folio, límite de recogida (30 min), activación y quién atendió; revisar `credencial_retenida` (por confirmar) |
 | `prestamo_item`: `vivo`, `devuelto_en`; índice único parcial de un ítem vivo por ejemplar y `check` de coherencia | Sirve como base | Agregar la condición del libro al devolverlo; el tope de 3 libros va en el servicio |
 | `parametro`: `clave`, `valor` (JSON), `descripcion`, `actualizado_en`, `actualizado_por` | Sirve como base | Agregar validación por clave (Zod) |
-| No existen | Nuevos | `categoria`, `catalogo_valor`, `titulo_materia`, `perfil_usuario`, `llamado_atencion`, `sancion`, `dia_no_habil`, `bitacora` |
+| No existen | Nuevos | `categoria`, `catalogo_valor`, `titulo_materia`, `llamado_atencion`, `sancion`, `dia_no_habil`, `bitacora` |
 
 ### Modelo objetivo
 
@@ -43,7 +42,7 @@ El esquema inicial está en `src/db/schema/` (`auth.ts` y `dominio.ts`). Este mo
 | `ejemplar` | `titulo_id`, `numero_utm`, `volumen`, `copia`, `estado`, `capturado_por`, baja (`baja_en`, `motivo_baja`) | El UTM es el código de barras. Único entre ejemplares vigentes con índice parcial `WHERE estado <> 'baja'`; reutilizable cuando queda libre (Q02). Las bajas no se borran |
 | `categoria` | `nombre` único, `permite_domicilio`, `permite_fotocopia`, `orden`, `activa` | Configurable; Consulta = solo sala, con fotocopia |
 | `catalogo_valor` | `catalogo`, `codigo`, `etiqueta`, `activo`, `orden` | Idiomas, países, motivos de baja, tipos de usuario; editables |
-| `perfil_usuario` | `usuario_id` (a `user.id`), `rol`, `tipo_usuario` (alumno, docente, publico), `matricula`, `carrera`, `semestre`, `estatus` | Se crea con tipo público al registrarse. Rol y tipo los asigna el personal. El padrón se importa desde CSV (RF-04) |
+| Columnas de dominio en `user` (sin tabla `perfil_usuario`) | `rol` (usuario, bibliotecario, administrador, consulta), `tipo_usuario` (alumno, trabajador, publico), `tipo_solicitado`, `matricula`, `carrera`, `semestre`, `numero_trabajador`, `estatus` | Un solo INSERT atómico al registrarse. Siempre nace con rol usuario y tipo público; lo declarado va en `tipo_solicitado` y los datos. Rol y tipo los asigna el personal. Matrícula única entre alumnos y número de trabajador único entre trabajadores. `carrera` guarda el código del catálogo `carrera` en `catalogo_valor`. El padrón se importa desde CSV (RF-04) |
 | `prestamo` y `prestamo_item` | Folio, usuario, modalidad (casa, sala, fotocopia), estado, fechas de solicitud, límite de recogida, activación, vencimiento y devolución; ejemplares del préstamo y su condición al devolver | Préstamo vivo = `pre_prestamo`, `activo` o `vencido` |
 | `llamado_atencion` y `sancion` | Usuario, motivo, fechas, quién la confirmó | Detrás de `sancion.multas_activas` |
 | `parametro` | `clave`, `valor` (JSON), `actualizado_por`, `actualizado_en` | Validación por clave; ver `04-informes-configuracion.md` |
@@ -56,7 +55,7 @@ El UTM de un libro dado de baja: el cliente pidió listar los UTM disponibles y 
 
 | Regla | Decisión | Dónde se aplica |
 |---|---|---|
-| Quién pide (P1) | Alumno con credencial, docente y administrativo con matrícula de trabajador: casa, fotocopia o sala. Público: solo sala o fotocopia | Tipos de usuario y modalidades permitidas, configurables |
+| Quién pide (P1) | Alumno con credencial y trabajador (docente o administrativo) con número de trabajador: casa, fotocopia o sala. Público: solo sala o fotocopia | Tipos de usuario y modalidades permitidas, configurables |
 | Ventana de recogida (P6) | 30 minutos, fija. Si la solicitud queda cerca del cierre (20:00) y no llega a tiempo, cuenta como multa | `prestamo.ventana_recogida_min` |
 | Vencimiento (P7) | 10:00 del día siguiente; con suspensiones, el siguiente día hábil | `prestamo.hora_vencimiento` y calendario |
 | Préstamo vivo (P8) | Una solicitud sin recoger cuenta (pre-préstamo); el uso en sala cuenta; máximo 3 libros por préstamo | Índice único parcial en la base; tope de 3 en el servicio |

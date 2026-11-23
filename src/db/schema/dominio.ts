@@ -49,22 +49,6 @@ export const tipoAutor = pgEnum("tipo_autor", [
   "congreso",
 ]);
 
-export const rolUsuario = pgEnum("rol_usuario", [
-  "alumno",
-  "bibliotecario",
-  "administrador_biblioteca",
-  "consulta",
-  "administrador_tecnico",
-]);
-
-export const tipoUsuario = pgEnum("tipo_usuario", [
-  "alumno",
-  "docente",
-  "publico",
-]);
-
-export const estatusPadron = pgEnum("estatus_padron", ["activo", "baja"]);
-
 export const condicionDevolucion = pgEnum("condicion_devolucion", [
   "bueno",
   "danado",
@@ -195,25 +179,6 @@ export const ejemplar = pgTable(
     ),
   ],
 );
-
-export const perfilUsuario = pgTable("perfil_usuario", {
-  usuarioId: text("usuario_id")
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  rol: rolUsuario("rol").notNull().default("alumno"),
-  tipoUsuario: tipoUsuario("tipo_usuario").notNull().default("publico"),
-  matricula: text("matricula").unique(),
-  carrera: text("carrera"),
-  semestre: integer("semestre"),
-  estatus: estatusPadron("estatus"),
-  creadoEn: timestamp("creado_en", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  actualizadoEn: timestamp("actualizado_en", { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
 
 export const prestamo = pgTable(
   "prestamo",

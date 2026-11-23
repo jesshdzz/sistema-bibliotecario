@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { esPersonal, usuarioSesion } from "@/lib/sesion";
+import { BotonCerrarSesion } from "./boton-cerrar-sesion";
 import { BotonTema } from "./boton-tema";
 import { Desplegable } from "./desplegable";
 import { EnlaceNav } from "./enlace-nav";
@@ -57,14 +58,8 @@ export async function Navbar() {
         <div className="ml-auto flex items-center gap-2 md:ml-2">
           <BotonTema />
           {usuario ? (
-            // shortcut: sin cierre de sesión hasta conectar better-auth (src/lib/auth.ts)
             <div className="hidden md:block">
-              <button
-                type="button"
-                className="h-10 cursor-pointer rounded-field border border-primary-content/40 px-3 text-sm font-medium hover:bg-primary-content/15"
-              >
-                Cerrar sesión
-              </button>
+              <BotonCerrarSesion className="h-10 cursor-pointer rounded-field border border-primary-content/40 px-3 text-sm font-medium hover:bg-primary-content/15" />
             </div>
           ) : (
             <Link
@@ -87,9 +82,7 @@ export async function Navbar() {
               <li className="mt-1 border-t border-base-300 pt-1">
                 {usuario ? (
                   <div className="grid">
-                    <button type="button" className="cursor-pointer text-left">
-                      Cerrar sesión
-                    </button>
+                    <BotonCerrarSesion className="cursor-pointer text-left" />
                   </div>
                 ) : (
                   <Link href="/iniciar-sesion">Iniciar sesión</Link>
