@@ -1,17 +1,17 @@
 # Requerimientos
 
-Prioridad: M indispensable, S deseable, C solo si hay tiempo. Estado: pendiente, en curso o hecho (todo está pendiente salvo el prototipo de interfaz, que no tiene lógica). Los ID se conservan de la versión del informe: hay saltos en la numeración y no se reutilizan (RF-56 y RF-57 son nuevos). Las prioridades de RF-51 a RF-53 son propuesta.
+Prioridad: M indispensable, S deseable, C solo si hay tiempo. Estado: pendiente, en curso o hecho (al 2026-11-22; las vistas del prototipo no cuentan como hecho mientras usen datos de ejemplo). Los ID se conservan de la versión del informe: hay saltos en la numeración y no se reutilizan (RF-56 y RF-57 son nuevos). Las prioridades de RF-51 a RF-53 son propuesta.
 
 ## Cuentas y seguridad
 
 | ID | Requerimiento | Prio | Estado |
 |---|---|---|---|
-| RF-01 | Registro e inicio de sesión con correo y contraseña, como un sitio web normal; se permiten usuarios externos a la universidad (el acceso solo con Google no está confirmado). Google puede añadirse como método adicional (Q24) | M | pendiente |
-| RF-03 | Roles: usuario, bibliotecario, administrador y consulta (solo lectura); el tipo de usuario (alumno, trabajador, público) es aparte | M | pendiente |
+| RF-01 | Registro e inicio de sesión con correo y contraseña, como un sitio web normal; se permiten usuarios externos a la universidad (el acceso solo con Google no está confirmado). Google puede añadirse como método adicional (Q24) | M | hecho |
+| RF-03 | Roles: usuario, bibliotecario, administrador y consulta (solo lectura); el tipo de usuario (alumno, trabajador, público) es aparte | M | en curso (en la base y en el registro; `/admin` solo distingue personal de usuario) |
 | RF-04 | Importar el padrón de alumnos desde CSV (activo o baja) y actualizarlo cada semestre; lo entrega servicios escolares | M | pendiente |
 | RF-05 | Alta, baja y restablecimiento de cuentas del personal por el administrador | M | pendiente |
 | RF-56 | Restablecer la contraseña de un usuario: por correo si hay SMTP (Q23); si no, lo hace un bibliotecario en ventanilla | M | pendiente |
-| RF-57 | En el registro la persona elige Alumno, Trabajador o Externo y declara sus datos (matrícula, carrera y semestre; o número de trabajador); la cuenta queda como público con lo declarado pendiente, y el bibliotecario la cambia a alumno o trabajador al validar su credencial o contra el padrón (Q25) | M | pendiente |
+| RF-57 | En el registro la persona elige Alumno, Trabajador o Externo y declara sus datos (matrícula, carrera y semestre; o número de trabajador); la cuenta queda como público con lo declarado pendiente, y el bibliotecario la cambia a alumno o trabajador al validar su credencial o contra el padrón (Q25) | M | en curso (registro hecho; falta la validación del bibliotecario) |
 | RF-06 | Bitácora de auditoría: préstamos, devoluciones, sanciones, ediciones, bajas y cambios de configuración | M | pendiente |
 
 ## Catálogo y ejemplares

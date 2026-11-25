@@ -7,6 +7,7 @@ import { getCarreras } from "@/lib/carreras";
 import { getParametro } from "@/lib/parametros";
 
 export default async function Registro() {
+  await connection();
   const dominios = {
     alumno: await getParametro("registro.dominios_alumno"),
     trabajador: await getParametro("registro.dominios_trabajador"),
