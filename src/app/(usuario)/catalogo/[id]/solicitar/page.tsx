@@ -1,7 +1,9 @@
 import Form from "next/form";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Dato, Encabezado } from "@/components/pagina";
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
+import { Grupo, Opcion } from "@/components/ui/campo";
+import { Dato, Encabezado } from "@/components/ui/pagina";
 import { disponibles, MODALIDADES, type Titulo } from "@/lib/biblioteca";
 import { usuarioSesion } from "@/lib/sesion";
 
@@ -23,7 +25,7 @@ export default async function SolicitarPrestamo({
           descripcion="Confirma los datos de tu solicitud."
         />
         {/* shortcut: no guarda nada; sólo navega al perfil con la solicitud en la URL. Sustituir por una server action. */}
-        <Form action="/perfil" className="tarjeta p-6 space-y-6">
+        <Form action="/perfil" className="tarjeta space-y-6 p-6">
           <input type="hidden" name="solicitud" value={t.id} />
           <dl className="space-y-3">
             <Dato etiqueta="Título">{t.titulo}</Dato>
@@ -32,37 +34,27 @@ export default async function SolicitarPrestamo({
               {t.clasificacion}
             </Dato>
           </dl>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Modalidad</legend>
+          <Grupo etiqueta="Modalidad">
             {Object.entries(MODALIDADES).map(([valor, etiqueta], i) => (
-              <label
+              <Opcion
                 key={valor}
-                className="flex items-center gap-2 py-1 text-sm"
-              >
-                <input
-                  type="radio"
-                  name="modalidad"
-                  value={valor}
-                  defaultChecked={i === 0}
-                  className="radio radio-primary radio-sm"
-                />
-                {etiqueta}
-              </label>
+                tipo="radio"
+                etiqueta={etiqueta}
+                name="modalidad"
+                value={valor}
+                defaultChecked={i === 0}
+              />
             ))}
-          </fieldset>
-          <div role="alert" className="alert alert-info">
-            <span>
-              Recoge el material en el mostrador dentro del plazo de recogida.
-              Presenta tu credencial vigente.
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-3 justify-end">
-            <Link href={`/catalogo/${t.id}`} className="btn btn-ghost">
+          </Grupo>
+          <Alerta tono="info">
+            Recoge el material en el mostrador dentro del plazo de recogida.
+            Presenta tu credencial vigente.
+          </Alerta>
+          <div className="flex flex-wrap justify-end gap-3">
+            <Boton href={`/catalogo/${t.id}`} variante="texto">
               Cancelar
-            </Link>
-            <button type="submit" className="btn btn-primary">
-              Confirmar solicitud
-            </button>
+            </Boton>
+            <Boton type="submit">Confirmar solicitud</Boton>
           </div>
         </Form>
       </div>
