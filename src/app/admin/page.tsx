@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Encabezado, Seccion } from "@/components/pagina";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Cifra } from "@/components/ui/tarjeta";
 import { fecha, type Multa, type Prestamo } from "@/lib/biblioteca";
 
 export default function Resumen() {
@@ -43,18 +43,9 @@ export default function Resumen() {
         descripcion={`Pendientes del mostrador al ${fecha(new Date().toISOString())}.`}
       />
       <ul className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {cifras.map(([etiqueta, valor, href, accion]) => (
+        {cifras.map(([etiqueta, valor, href, nota]) => (
           <li key={etiqueta}>
-            <Link
-              href={href}
-              className="tarjeta block h-full p-4 hover:border-primary"
-            >
-              <span className="block text-sm text-base-content/70">
-                {etiqueta}
-              </span>
-              <span className="mt-1 block text-2xl font-semibold">{valor}</span>
-              <span className="mt-2 block text-sm underline">{accion}</span>
-            </Link>
+            <Cifra etiqueta={etiqueta} valor={valor} href={href} nota={nota} />
           </li>
         ))}
       </ul>

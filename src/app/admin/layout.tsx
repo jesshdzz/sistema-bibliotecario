@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { EnlaceNav } from "@/components/enlace-nav";
 import { Footer } from "@/components/footer";
-import { Navbar } from "@/components/navbar";
+import { ACTIVO_MENU, Navbar } from "@/components/navbar";
 import { PanelLateral } from "@/components/panel-lateral";
 import { esPersonal, usuarioSesion } from "@/lib/sesion";
 
@@ -60,10 +60,7 @@ export default async function AdminLayout({
                     <ul>
                       {grupo.enlaces.map(({ texto, ...enlace }) => (
                         <li key={enlace.href}>
-                          <EnlaceNav
-                            {...enlace}
-                            className="aria-[current=page]:bg-primary aria-[current=page]:text-primary-content"
-                          >
+                          <EnlaceNav {...enlace} className={ACTIVO_MENU}>
                             {texto}
                           </EnlaceNav>
                         </li>
