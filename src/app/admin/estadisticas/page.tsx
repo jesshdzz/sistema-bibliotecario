@@ -1,5 +1,6 @@
-import { InsigniaEstado } from "@/components/insignia-estado";
-import { Encabezado, Seccion } from "@/components/pagina";
+import { InsigniaEstado } from "@/components/ui/insignia-estado";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Vacio } from "@/components/ui/tarjeta";
 import { estadoEjemplar, modalidadPrestamo } from "@/db/schema";
 import { MODALIDADES, type Modalidad, type Titulo } from "@/lib/biblioteca";
 
@@ -89,9 +90,7 @@ export default function Estadisticas() {
       />
       <Seccion titulo="Préstamos">
         {total === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            Aún no hay préstamos registrados.
-          </p>
+          <Vacio>Aún no hay préstamos registrados.</Vacio>
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
             <Grafica
@@ -177,9 +176,7 @@ export default function Estadisticas() {
       </Seccion>
       <Seccion titulo="Estado del acervo">
         {ejemplares.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            Aún no hay ejemplares registrados.
-          </p>
+          <Vacio>Aún no hay ejemplares registrados.</Vacio>
         ) : (
           <Grafica
             titulo="Ejemplares por estado"

@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
-import { Dato, Encabezado, Seccion } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
+import { Boton } from "@/components/ui/boton";
+import { Insignia } from "@/components/ui/insignia";
+import { InsigniaMulta } from "@/components/ui/insignia-estado";
+import { Dato, Encabezado, Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Vacio } from "@/components/ui/tarjeta";
 import {
   ESTADOS_VIVOS,
   MOTIVOS,
@@ -10,13 +14,6 @@ import {
   sancion,
   type Usuario,
 } from "@/lib/biblioteca";
-
-// warning = multa pendiente, success = cumplida (design system).
-const ESTADOS_MULTA: Record<Multa["estado"], [string, string]> = {
-  pendiente: ["Pendiente", "badge-warning"],
-  cumplida: ["Cumplida", "badge-success"],
-  condonada: ["Condonada", "badge-ghost"],
-};
 
 export default async function DetalleUsuario({
   params,
@@ -42,9 +39,12 @@ export default async function DetalleUsuario({
       <Encabezado
         titulo={u.nombre}
         accion={
-          <button type="button" className="btn btn-primary">
+          <Boton
+            variante={bloqueado ? "solido" : "contorno"}
+            color={bloqueado ? "primary" : "error"}
+          >
             {bloqueado ? "Desbloquear préstamos" : "Bloquear préstamos"}
-          </button>
+          </Boton>
         }
       />
 
@@ -58,11 +58,9 @@ export default async function DetalleUsuario({
         <Dato etiqueta="Rol">{u.rol}</Dato>
         <Dato etiqueta="Adscripción">{u.carrera}</Dato>
         <Dato etiqueta="Préstamos">
-          <span
-            className={`badge badge-sm ${bloqueado ? "badge-error" : "badge-success"}`}
-          >
+          <Insignia color={bloqueado ? "error" : "success"}>
             {bloqueado ? "Bloqueados por multa" : "Habilitados"}
-          </span>
+          </Insignia>
         </Dato>
         <Dato etiqueta="Multas pendientes">
           {pendientes.length > 0
@@ -85,30 +83,23 @@ export default async function DetalleUsuario({
 
       <Seccion titulo="Multas">
         {susMultas.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            No tiene multas registradas.
-          </p>
+          <Vacio>No tiene multas registradas.</Vacio>
         ) : (
           <Tabla
             columnas={["Folio del préstamo", "Motivo", "Sanción", "Estado"]}
           >
-            {susMultas.map((m) => {
-              const [etiqueta, color] = ESTADOS_MULTA[m.estado];
-              return (
-                <tr key={m.folio}>
-                  <td>
-                    <Mono>{m.folio}</Mono>
-                  </td>
-                  <td>{MOTIVOS[m.motivo]}</td>
-                  <td>{sancion(m)}</td>
-                  <td>
-                    <span className={`badge badge-sm ${color}`}>
-                      {etiqueta}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
+            {susMultas.map((m) => (
+              <tr key={m.folio}>
+                <td>
+                  <Mono>{m.folio}</Mono>
+                </td>
+                <td>{MOTIVOS[m.motivo]}</td>
+                <td>{sancion(m)}</td>
+                <td>
+                  <InsigniaMulta estado={m.estado} />
+                </td>
+              </tr>
+            ))}
           </Tabla>
         )}
       </Seccion>

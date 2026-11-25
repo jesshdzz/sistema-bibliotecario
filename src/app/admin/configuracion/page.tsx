@@ -1,6 +1,8 @@
 import Form from "next/form";
-import { Campo } from "@/components/campo";
-import { Encabezado, Seccion } from "@/components/pagina";
+import { Boton } from "@/components/ui/boton";
+import { Campo, Entrada } from "@/components/ui/campo";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Vacio } from "@/components/ui/tarjeta";
 
 // shortcut: sin datos hasta conectar la base; incluye `biblioteca.horario`
 const parametros: { clave: string; descripcion: string; valor: number }[] = [];
@@ -24,9 +26,7 @@ export default function Configuracion() {
       {/* shortcut: no guarda nada; los campos no llevan `name`. Sustituir por una server action sobre la tabla `parametro`. */}
       <Form action="/admin/configuracion" className="max-w-3xl space-y-8">
         {parametros.length === 0 && (
-          <p className="tarjeta p-6 text-base-content/70">
-            No hay parámetros configurados.
-          </p>
+          <Vacio>No hay parámetros configurados.</Vacio>
         )}
         {GRUPOS.filter(([, grupo]) => grupo.length > 0).map(
           ([titulo, grupo]) => (
@@ -34,12 +34,11 @@ export default function Configuracion() {
               <div className={REJILLA}>
                 {grupo.map((p) => (
                   <Campo key={p.clave} etiqueta={p.descripcion}>
-                    <input
+                    <Entrada
                       type="number"
                       min={0}
                       required
                       defaultValue={p.valor}
-                      className="input w-full"
                     />
                   </Campo>
                 ))}
@@ -47,9 +46,7 @@ export default function Configuracion() {
             </Seccion>
           ),
         )}
-        <button type="submit" className="btn btn-primary">
-          Guardar cambios
-        </button>
+        <Boton type="submit">Guardar cambios</Boton>
       </Form>
     </>
   );
