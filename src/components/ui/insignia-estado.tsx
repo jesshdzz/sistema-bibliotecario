@@ -1,19 +1,29 @@
-import type { EstadoEjemplar, EstadoPrestamo } from "@/lib/biblioteca";
+import type { EstadoEjemplar, EstadoPrestamo, Multa } from "@/lib/biblioteca";
+import { Insignia } from "./insignia";
+
+type Color = Parameters<typeof Insignia>[0]["color"];
 
 // accent = disponible, error = no disponible/vencido,
 // warning = requiere atención, success = préstamo en regla, info = en trámite.
-const ESTADOS: Record<EstadoEjemplar | EstadoPrestamo, [string, string]> = {
-  disponible: ["Disponible", "badge-accent"],
-  apartado: ["Apartado", "badge-warning"],
-  prestado: ["En préstamo", "badge-error"],
-  en_sala: ["En sala", "badge-info"],
-  no_disponible: ["No disponible", "badge-error"],
-  baja: ["Baja", "badge-ghost"],
-  pre_prestamo: ["Por recoger", "badge-info"],
-  activo: ["Activo", "badge-success"],
-  vencido: ["Vencido", "badge-error"],
-  devuelto: ["Devuelto", "badge-ghost"],
-  cancelado: ["Cancelado", "badge-ghost"],
+const ESTADOS: Record<EstadoEjemplar | EstadoPrestamo, [string, Color]> = {
+  disponible: ["Disponible", "accent"],
+  apartado: ["Apartado", "warning"],
+  prestado: ["En préstamo", "error"],
+  en_sala: ["En sala", "info"],
+  no_disponible: ["No disponible", "error"],
+  baja: ["Baja", "ghost"],
+  pre_prestamo: ["Por recoger", "info"],
+  activo: ["Activo", "success"],
+  vencido: ["Vencido", "error"],
+  devuelto: ["Devuelto", "ghost"],
+  cancelado: ["Cancelado", "ghost"],
+};
+
+// warning = multa pendiente, success = cumplida.
+const ESTADOS_MULTA: Record<Multa["estado"], [string, Color]> = {
+  pendiente: ["Pendiente", "warning"],
+  cumplida: ["Cumplida", "success"],
+  condonada: ["Condonada", "ghost"],
 };
 
 export const etiquetaEstado = (estado: EstadoEjemplar | EstadoPrestamo) =>
@@ -25,9 +35,10 @@ export function InsigniaEstado({
   estado: EstadoEjemplar | EstadoPrestamo;
 }) {
   const [etiqueta, color] = ESTADOS[estado];
-  return (
-    <span className={`badge ${color} badge-sm shrink-0 whitespace-nowrap`}>
-      {etiqueta}
-    </span>
-  );
+  return <Insignia color={color}>{etiqueta}</Insignia>;
+}
+
+export function InsigniaMulta({ estado }: { estado: Multa["estado"] }) {
+  const [etiqueta, color] = ESTADOS_MULTA[estado];
+  return <Insignia color={color}>{etiqueta}</Insignia>;
 }
