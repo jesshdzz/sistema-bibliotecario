@@ -35,8 +35,9 @@ El esquema inicial está en `src/db/schema/` (`auth.ts` y `dominio.ts`). Este mo
 
 | Tabla | Contenido principal | Notas |
 |---|---|---|
-| `titulo` | `numero_ficha` (identidad, único, inmutable), `categoria_id`, `tipo` (opcional), `isbn` (único, opcional), los demás campos de la ficha, `clasificacion_lcc` y `clasificacion_lcc_orden`, `capturado_por`, `creado_en`, `actualizado_en` | El tipo de material (libro, revista, artículo, tesis) asigna la categoría por defecto (Q05, Q07) |
+| `titulo` | `numero_ficha` (identidad, único, inmutable), `categoria_id`, `tipo` (opcional), los demás campos de la ficha, `clasificacion_lcc` y `clasificacion_lcc_orden`, `capturado_por`, `creado_en`, `actualizado_en` | El tipo de material (libro, revista, artículo, tesis) asigna la categoría por defecto (Q05, Q07) |
 | `titulo_materia` | Encabezamientos de materia (varios por título) | Campo repetible; puede ser un arreglo |
+| `titulo_isbn` | `titulo_id`, `isbn`, `nota` (tomo, editorial, encuadernación) | MARC 020 repetible. Sin unicidad global: el sistema heredado muestra ISBN repetidos legítimos entre ediciones y colecciones (2026-11-24) |
 | `ejemplar` | `titulo_id`, `numero_utm`, `volumen`, `copia`, `estado`, `capturado_por`, baja (`baja_en`, `motivo_baja`) | El UTM es el código de barras. Único entre ejemplares vigentes con índice parcial `WHERE estado <> 'baja'`; reutilizable cuando queda libre (Q02). Las bajas no se borran |
 | `categoria` | `nombre` único, `permite_domicilio`, `permite_fotocopia`, `orden`, `activa` | Configurable; Consulta = solo sala, con fotocopia |
 | `catalogo_valor` | `catalogo`, `codigo`, `etiqueta`, `activo`, `orden` | Idiomas, países, motivos de baja, tipos de usuario; editables |

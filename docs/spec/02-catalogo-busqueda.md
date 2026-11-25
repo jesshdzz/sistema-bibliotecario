@@ -25,7 +25,7 @@ El formulario debe contener estos campos. Columnas propuestas; los nombres exact
 | 15 | Notas de contenido | `notas_contenido` | Bibliotecario | 505 / 520 por verificar |
 | 16 | Notas de tesis | `notas_tesis` (visible si `es_tesis`) | Bibliotecario | 502 verificado (nota de disertación) |
 | 17 | Contenido (índice) | `contenido` (texto largo) | Bibliotecario | 505 por verificar |
-| 18 | ISBN | `isbn` (único, opcional; validar dígito verificador) | Bibliotecario o autocompletado | 020 verificado |
+| 18 | ISBN | `titulo_isbn` (varios por título, cada uno con nota opcional: tomo, editorial, encuadernación; sin unicidad global porque se repite entre ediciones y colecciones; opcional; validar dígito verificador) | Bibliotecario o autocompletado | 020 verificado |
 | 19 | Encabezamiento de materia | `titulo_materia` (varios) | Bibliotecario | 650 verificado |
 | 20 | Ejemplares (número de libros y/o copias) | filas en `ejemplar` | Bibliotecario (ver sección 3) | Existencias; 852 por verificar |
 | 21 | Clasificación | `clasificacion_lcc` | Bibliotecario (hoy consulta tablas LCC a mano) | 050 verificado |

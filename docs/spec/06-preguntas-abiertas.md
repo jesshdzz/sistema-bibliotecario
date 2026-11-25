@@ -36,6 +36,34 @@ Cada pregunta trae una **propuesta por defecto** para poder avanzar sin inventar
 
 **Q25. ¿Cómo se acredita que un usuario es alumno o trabajador?** Por defecto: el registro declara el tipo y los datos, pero la cuenta es pública hasta que el bibliotecario valide la credencial en ventanilla (o el correo institucional contra el padrón) y cambie el tipo de usuario. Pendiente de confirmar con el cliente; el mecanismo ya está decidido (2026-11-21).
 
+## Migración del sistema heredado (para la próxima visita)
+
+Base entregada: `biblioteca_20261119.sql` (PostgreSQL 8.2, sin claves ni restricciones, texto Latin-1 en mayúsculas, sin tabla de usuarios). Decisiones del equipo (2026-11-24): la primera fase migra solo libros (títulos, ejemplares, materias, notas, tesis) con un ETL repetible en el repositorio que pasa por un esquema `legacy`; se conserva el folio como `numero_ficha`; el texto se convierte de mayúsculas; `tipo_autor` queda nulo; no se migran credenciales (el personal crea cuenta nueva).
+
+**Q26. Prefijo `CD` en la clasificación (209 títulos) y columna `adicional` (`C`, `V`, `S`, `CD`, `NINGUNO`).** Los prefijos `T`, `I`, `C` y `P` corresponden a Tesis, INEGI, Consulta y Posgrado. Por defecto: `CD` = libro con material anexo, categoría Libros y revistas; `adicional` pasa a notas generales.
+
+**Q27. UTM repetidos: 73 números en 146 ejemplares.** Por defecto: esos ejemplares quedan fuera de la migración y se entrega un CSV de conflictos para que la biblioteca asigne el UTM correcto.
+
+**Q28. Estado real de los ejemplares.** El sistema heredado no registra bajas; 671 préstamos apuntan a UTM que ya no existen y 64 títulos no tienen ejemplares. ¿Hay inventario reciente? Por defecto: todos entran como `disponible`.
+
+**Q29. Historial de préstamos (338 573 devoluciones, 2003–2025, solo con matrícula).** ¿Se conserva? ¿Cuántos años? ¿Anonimizado? Por defecto: no se migra hasta decidirlo; el dump se resguarda fuera del repositorio.
+
+**Q30. Significado de los códigos heredados.** `tipo_usu` 1–4, `tipo_prest` 0–2, `prestamos.status` 3 y la tabla `cargos`. Por defecto (deducido de los datos, sin confirmar): `tipo_usu` 1 alumno, 2 profesor, 3 externo; `tipo_prest` 1 sala, 2 domicilio; `status` 3 apartado sin recoger.
+
+**Q31. Obtención del ejemplar (compra, donación, reposición; 11 400 con dato).** ¿Se conserva? Por defecto: sí, como catálogo editable `obtencion`.
+
+**Q32. Revistas: 1 020 títulos, 13 953 números, 110 163 artículos.** ¿Se migran los artículos? ¿Con qué UTM se prestan los números? Hoy su número de edición choca con 13 783 UTM de libros. Por defecto: segunda fase.
+
+**Q33. Material audiovisual (1 669 CD, VHS y DVD) y material anexo de los libros.** ¿Sigue en uso? Por defecto: fuera del alcance.
+
+**Q34. Fecha de corte.** El catálogo heredado se sigue capturando (última ficha: 2026-07-03). ¿Cuándo se deja de usar? Por defecto: el ETL se repite hasta el corte.
+
+**Q35. Bibliotecarios e iniciales.** El historial usa iniciales (`JOR`, `RGG`…) de más de 15 personas. ¿Quiénes siguen activos? Por defecto: `capturado_por` nulo en lo migrado.
+
+**Q36. ISBN inválidos y fichas duplicadas.** 525 fichas tienen un ISBN que falla el dígito verificador o no se puede leer; 5 grupos (12 fichas) tienen mismo título, edición e ISBN. Por defecto: se migran tal cual y se entrega un CSV para revisión (sin consultar servicios externos). Los ISBN repetidos entre ediciones o colecciones y los títulos con varios ISBN son legítimos y se modelan con `titulo_isbn` (decisión del equipo, 2026-11-24).
+
+**Q37. Carreras de las tesis.** Equivalencias propuestas de los 15 códigos heredados al catálogo `carrera`; las maestrías y el doctorado pasan a `POS`; 92 tesis no tienen carrera. Por defecto: esa equivalencia, sin carrera donde falte.
+
 ## Resueltas
 
 | Fecha | Pregunta | Respuesta |
