@@ -1,19 +1,20 @@
 import Form from "next/form";
-import Link from "next/link";
 import { EtiquetaLomo } from "@/components/etiqueta-lomo";
-import { Encabezado } from "@/components/pagina";
-import { Tabla } from "@/components/tabla";
 import { Disponibilidad } from "@/components/tarjeta-titulo";
-import { TIPOS, type Titulo } from "@/lib/biblioteca";
-
-const uno = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
+import { Entrada, Selector } from "@/components/ui/campo";
+import { Encabezado } from "@/components/ui/pagina";
+import { Tabla } from "@/components/ui/tabla";
+import { Vacio } from "@/components/ui/tarjeta";
+import { TIPOS, type Titulo, uno } from "@/lib/biblioteca";
 
 export default async function Libros({
   searchParams,
 }: PageProps<"/admin/catalogo">) {
   const sp = await searchParams;
-  const q = uno(sp.q) ?? "";
-  const tipo = uno(sp.tipo) ?? "";
+  const q = uno(sp.q);
+  const tipo = uno(sp.tipo);
   const aviso = uno(sp.aviso);
   // shortcut: sin datos hasta conectar la base
   const titulos: Titulo[] = [];
@@ -24,21 +25,15 @@ export default async function Libros({
       <Encabezado
         titulo="Libros"
         descripcion="Títulos y ejemplares del acervo: libros, revistas y artículos."
-        accion={
-          <Link href="/admin/catalogo/nuevo" className="btn btn-primary">
-            Nuevo título
-          </Link>
-        }
+        accion={<Boton href="/admin/catalogo/nuevo">Nuevo título</Boton>}
       />
 
       {(aviso === "guardado" || aviso === "eliminado") && (
-        <div role="alert" className="alert alert-success">
-          <span>
-            {aviso === "guardado" ? "Título guardado." : "Título eliminado."}{" "}
-            Este es un prototipo: los cambios no se almacenan, por eso la lista
-            sigue igual.
-          </span>
-        </div>
+        <Alerta tono="success">
+          {aviso === "guardado" ? "Título guardado." : "Título eliminado."} Este
+          es un prototipo: los cambios no se almacenan, por eso la lista sigue
+          igual.
+        </Alerta>
       )}
 
       {/* key: al cambiar los filtros se vuelve a montar y los campos coinciden con la URL */}
@@ -47,19 +42,19 @@ export default async function Libros({
         action="/admin/catalogo"
         className="tarjeta flex flex-wrap gap-3 p-4"
       >
-        <input
+        <Entrada
           type="search"
           name="q"
           defaultValue={q}
           aria-label="Buscar en el acervo"
           placeholder="Título, autor, ISBN o signatura"
-          className="input min-w-0 grow basis-64"
+          className="min-w-0 grow basis-64"
         />
-        <select
+        <Selector
           name="tipo"
           defaultValue={tipo}
           aria-label="Tipo de material"
-          className="select w-auto grow sm:grow-0"
+          className="w-auto grow sm:grow-0"
         >
           <option value="">Todos los tipos</option>
           {Object.entries(TIPOS).map(([valor, etiqueta]) => (
@@ -67,14 +62,12 @@ export default async function Libros({
               {etiqueta}
             </option>
           ))}
-        </select>
-        <button type="submit" className="btn btn-primary">
-          Buscar
-        </button>
+        </Selector>
+        <Boton type="submit">Buscar</Boton>
         {(q || tipo) && (
-          <Link href="/admin/catalogo" className="btn btn-ghost">
+          <Boton href="/admin/catalogo" variante="texto">
             Limpiar
-          </Link>
+          </Boton>
         )}
       </Form>
 
@@ -83,9 +76,7 @@ export default async function Libros({
           {resultados.length} de {titulos.length} títulos
         </p>
         {resultados.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            No se encontraron títulos con esos criterios.
-          </p>
+          <Vacio>No se encontraron títulos con esos criterios.</Vacio>
         ) : (
           <Tabla
             columnas={["Signatura", "Título", "Tipo", "Ejemplares", "Acciones"]}
@@ -105,18 +96,17 @@ export default async function Libros({
                 </td>
                 <td>
                   <div className="flex gap-1">
-                    <Link
-                      href={`/admin/catalogo/${t.id}`}
-                      className="btn btn-primary btn-xs"
-                    >
+                    <Boton href={`/admin/catalogo/${t.id}`} tamano="xs">
                       Editar
-                    </Link>
-                    <Link
+                    </Boton>
+                    <Boton
                       href={`/admin/catalogo/${t.id}/eliminar`}
-                      className="btn btn-ghost btn-xs text-error"
+                      variante="texto"
+                      color="error"
+                      tamano="xs"
                     >
                       Eliminar
-                    </Link>
+                    </Boton>
                   </div>
                 </td>
               </tr>

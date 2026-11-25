@@ -1,15 +1,13 @@
 import Form from "next/form";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Campo } from "@/components/campo";
 import { EtiquetaLomo } from "@/components/etiqueta-lomo";
-import { etiquetaEstado } from "@/components/insignia-estado";
-import { Encabezado, Seccion } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
+import { Boton } from "@/components/ui/boton";
+import { AreaTexto, Campo, Entrada, Selector } from "@/components/ui/campo";
+import { etiquetaEstado } from "@/components/ui/insignia-estado";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
 import { estadoEjemplar } from "@/db/schema";
 import { TIPOS, type Titulo } from "@/lib/biblioteca";
-
-const MONO = "font-mono text-[13px] font-medium";
 
 /** Alta (`/admin/catalogo/nuevo`) y edición de un título con el mismo formulario. */
 export default async function EditarTitulo({
@@ -32,12 +30,13 @@ export default async function EditarTitulo({
         }
         accion={
           t && (
-            <Link
+            <Boton
               href={`/admin/catalogo/${t.id}/eliminar`}
-              className="btn btn-outline btn-error"
+              variante="contorno"
+              color="error"
             >
               Eliminar título
-            </Link>
+            </Boton>
           )
         }
       />
@@ -53,65 +52,46 @@ export default async function EditarTitulo({
           <div className="grid gap-x-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <Campo etiqueta="Título">
-                <input
-                  required
-                  defaultValue={t?.titulo}
-                  className="input w-full"
-                />
+                <Entrada required defaultValue={t?.titulo} />
               </Campo>
             </div>
             <Campo etiqueta="Autores">
-              <input defaultValue={t?.autores} className="input w-full" />
+              <Entrada defaultValue={t?.autores} />
             </Campo>
             <Campo etiqueta="Editorial">
-              <input defaultValue={t?.editorial} className="input w-full" />
+              <Entrada defaultValue={t?.editorial} />
             </Campo>
             <Campo etiqueta="Año">
-              <input
-                inputMode="numeric"
-                defaultValue={t?.anio}
-                className="input w-full"
-              />
+              <Entrada inputMode="numeric" defaultValue={t?.anio} />
             </Campo>
             <Campo etiqueta="Tipo de material">
-              <select defaultValue={t?.tipo} className="select w-full">
+              <Selector defaultValue={t?.tipo}>
                 {Object.entries(TIPOS).map(([valor, etiqueta]) => (
                   <option key={valor} value={valor}>
                     {etiqueta}
                   </option>
                 ))}
-              </select>
+              </Selector>
             </Campo>
             <Campo etiqueta="ISBN o ISSN">
-              <input
-                defaultValue={t?.isbn}
-                className={`input w-full ${MONO}`}
-              />
+              <Entrada mono defaultValue={t?.isbn} />
             </Campo>
             <Campo etiqueta="Signatura topográfica">
-              <input
-                required
-                defaultValue={t?.clasificacion}
-                className={`input w-full ${MONO}`}
-              />
+              <Entrada mono required defaultValue={t?.clasificacion} />
             </Campo>
             <div className="sm:col-span-2">
               <Campo etiqueta="Resumen">
-                <textarea
-                  rows={4}
-                  defaultValue={t?.resumen}
-                  className="textarea w-full"
-                />
+                <AreaTexto rows={4} defaultValue={t?.resumen} />
               </Campo>
             </div>
           </div>
           <div className="mt-6 flex flex-wrap justify-end gap-3">
-            <Link href="/admin/catalogo" className="btn btn-ghost">
+            <Boton href="/admin/catalogo" variante="texto">
               Cancelar
-            </Link>
-            <button type="submit" className="btn btn-primary">
+            </Boton>
+            <Boton type="submit">
               {t ? "Guardar cambios" : "Registrar título"}
-            </button>
+            </Boton>
           </div>
         </div>
       </Form>
@@ -126,39 +106,40 @@ export default async function EditarTitulo({
                   <Mono>{e.codigoBarras}</Mono>
                 </td>
                 <td>
-                  <select
+                  <Selector
+                    tamano="sm"
                     defaultValue={e.estado}
                     aria-label={`Estado del ejemplar ${e.codigoBarras}`}
-                    className="select select-sm w-44"
+                    className="w-44"
                   >
                     {estadoEjemplar.enumValues.map((estado) => (
                       <option key={estado} value={estado}>
                         {etiquetaEstado(estado)}
                       </option>
                     ))}
-                  </select>
+                  </Selector>
                 </td>
                 <td>
-                  <button
-                    type="button"
+                  <Boton
+                    variante="texto"
+                    color="error"
+                    tamano="xs"
                     disabled={e.estado === "baja"}
-                    className="btn btn-ghost btn-xs text-error"
                   >
                     Dar de baja
-                  </button>
+                  </Boton>
                 </td>
               </tr>
             ))}
           </Tabla>
           <div className="mt-4 flex flex-wrap gap-3">
-            <input
+            <Entrada
+              mono
               aria-label="Código de barras del nuevo ejemplar"
               placeholder="UTM-000000"
-              className={`input w-48 ${MONO}`}
+              className="w-48"
             />
-            <button type="button" className="btn btn-outline">
-              Agregar ejemplar
-            </button>
+            <Boton variante="contorno">Agregar ejemplar</Boton>
           </div>
         </Seccion>
       )}
