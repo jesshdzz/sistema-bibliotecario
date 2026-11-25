@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Campo } from "@/components/campo";
+import { Campo, Entrada, Segmentado, Selector } from "@/components/ui/campo";
 import type { Carreras, Dominios } from "@/lib/registro";
 
 const TIPOS = [
@@ -25,20 +25,12 @@ export function CamposRegistro({
   return (
     <>
       <Campo etiqueta="Tipo de cuenta">
-        <div className="join w-full">
-          {TIPOS.map(([valor, etiqueta]) => (
-            <input
-              key={valor}
-              type="radio"
-              name="tipoSolicitado"
-              value={valor}
-              aria-label={etiqueta}
-              checked={tipo === valor}
-              onChange={() => setTipo(valor)}
-              className="join-item btn flex-1"
-            />
-          ))}
-        </div>
+        <Segmentado
+          name="tipoSolicitado"
+          opciones={TIPOS}
+          valor={tipo}
+          onChange={(v) => setTipo(v as typeof tipo)}
+        />
       </Campo>
       {tipo !== "publico" && (
         <p className="my-2 text-sm text-base-content/70">
@@ -49,15 +41,10 @@ export function CamposRegistro({
       {tipo === "alumno" && (
         <>
           <Campo etiqueta="Matrícula">
-            <input
-              type="text"
-              name="matricula"
-              required
-              className="input w-full font-mono"
-            />
+            <Entrada type="text" name="matricula" required mono />
           </Campo>
           <Campo etiqueta="Carrera">
-            <select
+            <Selector
               name="carrera"
               required
               value={carrera}
@@ -66,7 +53,6 @@ export function CamposRegistro({
                 if (Number(semestre) > carreras[e.target.value].semestreMax)
                   setSemestre("");
               }}
-              className="select w-full"
             >
               <option value="" disabled>
                 Elige tu carrera
@@ -76,16 +62,15 @@ export function CamposRegistro({
                   {etiqueta}
                 </option>
               ))}
-            </select>
+            </Selector>
           </Campo>
           <Campo etiqueta="Semestre">
-            <select
+            <Selector
               name="semestre"
               required
               disabled={!carrera}
               value={semestre}
               onChange={(e) => setSemestre(e.target.value)}
-              className="select w-full"
             >
               <option value="" disabled>
                 Elige tu semestre
@@ -95,22 +80,24 @@ export function CamposRegistro({
                   {n}
                 </option>
               ))}
-            </select>
+            </Selector>
           </Campo>
         </>
       )}
       {tipo === "trabajador" && (
         <Campo etiqueta="Número de trabajador">
-          <input
-            type="text"
-            name="numeroTrabajador"
-            required
-            className="input w-full font-mono"
-          />
+          <Entrada type="text" name="numeroTrabajador" required mono />
         </Campo>
       )}
-      <Campo etiqueta="Correo electrónico">
-        <input
+      <Campo
+        etiqueta="Correo electrónico"
+        ayuda={
+          tipo !== "publico"
+            ? `Usa tu correo institucional (${dominios[tipo].map((d) => `@${d}`).join(" o ")}).`
+            : undefined
+        }
+      >
+        <Entrada
           type="email"
           name="email"
           required
@@ -118,16 +105,8 @@ export function CamposRegistro({
           placeholder={
             tipo !== "publico" ? "nombre@gs.utm.mx" : "correo@email.com"
           }
-          className="input w-full"
         />
       </Campo>
-
-      {tipo !== "publico" && (
-        <p className="my-2 text-sm text-base-content/70">
-          Usa tu correo institucional (
-          {dominios[tipo].map((d) => `@${d}`).join(" o ")}).
-        </p>
-      )}
     </>
   );
 }

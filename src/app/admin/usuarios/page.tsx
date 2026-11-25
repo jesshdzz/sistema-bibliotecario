@@ -1,8 +1,12 @@
 import Form from "next/form";
 import Link from "next/link";
-import { InsigniaEstado } from "@/components/insignia-estado";
-import { Encabezado } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
+import { Boton } from "@/components/ui/boton";
+import { Entrada, Selector } from "@/components/ui/campo";
+import { Insignia } from "@/components/ui/insignia";
+import { InsigniaEstado } from "@/components/ui/insignia-estado";
+import { Encabezado } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Vacio } from "@/components/ui/tarjeta";
 import {
   ESTADOS_VIVOS,
   type Multa,
@@ -43,32 +47,30 @@ export default async function Usuarios({
         action="/admin/usuarios"
         className="tarjeta flex flex-wrap gap-3 p-4"
       >
-        <input
+        <Entrada
           type="search"
           name="q"
           defaultValue={q}
           aria-label="Buscar usuario"
           placeholder="Nombre o matrícula"
-          className="input min-w-0 grow basis-64"
+          className="min-w-0 grow basis-64"
         />
-        <select
+        <Selector
           name="rol"
           defaultValue={rol}
           aria-label="Rol"
-          className="select w-auto grow sm:grow-0"
+          className="w-auto grow sm:grow-0"
         >
           <option value="">Todos los roles</option>
           {ROLES.map((r) => (
             <option key={r}>{r}</option>
           ))}
-        </select>
-        <button type="submit" className="btn btn-primary">
-          Buscar
-        </button>
+        </Selector>
+        <Boton type="submit">Buscar</Boton>
         {(q || rol) && (
-          <Link href="/admin/usuarios" className="btn btn-ghost">
+          <Boton href="/admin/usuarios" variante="texto">
             Limpiar
-          </Link>
+          </Boton>
         )}
       </Form>
 
@@ -77,9 +79,7 @@ export default async function Usuarios({
           {resultados.length} de {usuarios.length} usuarios
         </p>
         {resultados.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            No se encontraron usuarios con esos criterios.
-          </p>
+          <Vacio>No se encontraron usuarios con esos criterios.</Vacio>
         ) : (
           <Tabla
             columnas={[
@@ -129,12 +129,9 @@ export default async function Usuarios({
                   <td className="whitespace-nowrap">
                     {pendientes.length > 0 ? (
                       pendientes.map((m) => (
-                        <span
-                          key={m.folio}
-                          className="badge badge-warning badge-sm"
-                        >
+                        <Insignia key={m.folio} color="warning">
                           {sancion(m)}
-                        </span>
+                        </Insignia>
                       ))
                     ) : (
                       <span className="text-base-content/70">Ninguna</span>

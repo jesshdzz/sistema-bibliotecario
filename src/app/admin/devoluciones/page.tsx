@@ -1,8 +1,10 @@
 import Form from "next/form";
-import Link from "next/link";
-import { Campo } from "@/components/campo";
-import { Encabezado, Seccion } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
+import { Boton } from "@/components/ui/boton";
+import { Campo, Entrada } from "@/components/ui/campo";
+import { Insignia } from "@/components/ui/insignia";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Vacio } from "@/components/ui/tarjeta";
 import {
   diasRetraso,
   fecha,
@@ -51,48 +53,38 @@ export default async function Devoluciones({
       >
         <div className="min-w-0 grow basis-64">
           <Campo etiqueta="Código de barras o folio">
-            <input
+            <Entrada
               type="search"
               name="q"
+              mono
               defaultValue={q}
-              // biome-ignore lint/a11y/noAutofocus: el lector de códigos escribe donde está el foco
               autoFocus
               placeholder="UTM-000102 o BIB-2026-004821"
-              className="input w-full font-mono text-[13px] font-medium"
             />
           </Campo>
         </div>
         <div className="flex gap-2 pb-1">
-          <button type="submit" className="btn btn-primary">
-            Buscar
-          </button>
+          <Boton type="submit">Buscar</Boton>
           {q && (
-            <Link href="/admin/devoluciones" className="btn btn-ghost">
+            <Boton href="/admin/devoluciones" variante="texto">
               Ver todos
-            </Link>
+            </Boton>
           )}
         </div>
       </Form>
 
       <Seccion titulo="Pendientes de devolver">
         {pendientes.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
+          <Vacio>
             {q
               ? `Ningún préstamo pendiente coincide con «${q}».`
               : "No hay préstamos pendientes de devolver."}
-          </p>
+          </Vacio>
         ) : (
           <TablaPendientes
             prestamos={pendientes}
             // shortcut: el botón no hace nada en el prototipo; conectar a una server action que cierre el préstamo y libere los ejemplares.
-            accion={() => (
-              <button
-                type="button"
-                className="btn btn-primary btn-xs whitespace-nowrap"
-              >
-                Registrar devolución
-              </button>
-            )}
+            accion={() => <Boton tamano="xs">Registrar devolución</Boton>}
           />
         )}
       </Seccion>
@@ -121,13 +113,9 @@ export default async function Devoluciones({
               <td className="whitespace-nowrap">{fecha(p.devueltoEn)}</td>
               <td>
                 {diasRetraso(p.venceEn, p.devueltoEn) > 0 ? (
-                  <span className="badge badge-warning badge-sm whitespace-nowrap">
-                    Con retraso
-                  </span>
+                  <Insignia color="warning">Con retraso</Insignia>
                 ) : (
-                  <span className="badge badge-ghost badge-sm whitespace-nowrap">
-                    A tiempo
-                  </span>
+                  <Insignia>A tiempo</Insignia>
                 )}
               </td>
             </tr>

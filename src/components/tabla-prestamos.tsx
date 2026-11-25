@@ -1,6 +1,8 @@
+import { Boton } from "@/components/ui/boton";
+import { InsigniaEstado } from "@/components/ui/insignia-estado";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Vacio } from "@/components/ui/tarjeta";
 import { fecha, MODALIDADES, type Prestamo } from "@/lib/biblioteca";
-import { InsigniaEstado } from "./insignia-estado";
-import { Mono, Tabla } from "./tabla";
 
 // shortcut: los botones no hacen nada en el prototipo; conectar a server actions.
 function Acciones({ p, admin }: { p: Prestamo; admin: boolean }) {
@@ -18,13 +20,9 @@ function Acciones({ p, admin }: { p: Prestamo; admin: boolean }) {
   return (
     <div className="flex gap-1 whitespace-nowrap">
       {acciones.map((accion, i) => (
-        <button
-          key={accion}
-          type="button"
-          className={`btn btn-xs ${i === 0 ? "btn-primary" : "btn-ghost"}`}
-        >
+        <Boton key={accion} variante={i === 0 ? "solido" : "texto"} tamano="xs">
           {accion}
-        </button>
+        </Boton>
       ))}
     </div>
   );
@@ -41,11 +39,7 @@ export function TablaPrestamos({
   conUsuario?: boolean;
 }) {
   if (prestamos.length === 0) {
-    return (
-      <p className="tarjeta p-6 text-base-content/70">
-        No hay préstamos que mostrar.
-      </p>
-    );
+    return <Vacio>No hay préstamos que mostrar.</Vacio>;
   }
   return (
     <Tabla

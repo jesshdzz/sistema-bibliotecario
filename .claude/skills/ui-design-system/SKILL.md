@@ -60,3 +60,23 @@ Maintain an authoritative, academic aesthetic. Avoid overly rounded "pill" shape
 - **Navbar:** `bg-primary text-primary-content border-b-2 border-secondary min-h-[72px]`.
 - **Catalog Search Layout:** Two-column grid on desktop (`lg:grid-cols-[280px_1fr] gap-6`). Left sidebar (`280px`) holds faceted filters using DaisyUI `checkbox checkbox-primary checkbox-sm`; collapsible into a DaisyUI `drawer` on mobile.
 - **Buttons & Inputs Alignment:** Standard interactive controls must use default `md` sizing (`h-10` / `40px`). Hero OPAC search bar uses `input-lg` + `btn-lg` (`h-12` / `48px`).
+
+## 5. Component Usage
+
+Views compose the primitives in `src/components/ui/`; they never write DaisyUI control classes (`btn`, `input`, `select`, `textarea`, `badge`, `alert`, `fieldset`, empty-state `tarjeta p-6`) directly.
+
+- `Boton` (`variante` solido|contorno|texto, `color`, `tamano`, `anchoCompleto`; `href` renders a Link), `clasesBoton` (button look on a non-button element).
+- `Campo` (`ayuda`, `error`), `Entrada`, `Selector`, `AreaTexto`, `Grupo` + `Opcion` (radio/checkbox), `Segmentado`.
+- `Alerta` (`tono`), `Insignia` (`color`), `InsigniaEstado`/`InsigniaMulta`, `Tarjeta` (`acento`), `Vacio`, `Cifra`.
+- `Encabezado`, `Seccion`, `Dato`, `Tabla`, `Mono`, `Desplegable`.
+
+`className` on a primitive is for layout only (margins, width, grid/flex, `join-item`, responsive visibility). Color, size and typography go through props. DaisyUI classes inside primitives are full literal strings in maps (never `btn-${x}`).
+
+| Case | Button |
+| --- | --- |
+| Primary action | `solido` `primary`, `md`; `anchoCompleto` only in narrow cards/columns |
+| Final destructive confirmation | `solido` `error` |
+| Header button that opens a destructive action | `contorno` `error` |
+| Row action | `tamano="xs"`; destructive row action: `texto` `error` |
+| Cancel / Clear | `texto`, same size as the primary button next to it |
+| Navigation | `href`; form submit: `type="submit"` |

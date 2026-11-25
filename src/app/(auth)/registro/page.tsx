@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { connection } from "next/server";
-import { Campo } from "@/components/campo";
 import { CamposRegistro } from "@/components/campos-registro";
 import { FormularioAuth } from "@/components/formulario-auth";
+import { Campo, Entrada } from "@/components/ui/campo";
+import { Encabezado } from "@/components/ui/pagina";
 import { getCarreras } from "@/lib/carreras";
 import { getParametro } from "@/lib/parametros";
 
@@ -14,41 +14,35 @@ export default async function Registro() {
   };
   return (
     <>
-      <h1 className="text-3xl font-bold">Crear cuenta</h1>
-      <p className="mt-1 mb-4 text-base-content/70">
-        Crea tu cuenta para solicitar libros.
-      </p>
+      <div className="mb-6">
+        <Encabezado
+          titulo="Crear cuenta"
+          descripcion="Crea tu cuenta para solicitar libros."
+        />
+      </div>
       <FormularioAuth modo="registro" boton="Crear cuenta">
         <Campo etiqueta="Nombre completo">
-          <input
-            type="text"
-            name="name"
-            required
-            autoComplete="name"
-            className="input w-full"
-          />
+          <Entrada type="text" name="name" required autoComplete="name" />
         </Campo>
 
         <CamposRegistro dominios={dominios} carreras={await getCarreras()} />
 
         <Campo etiqueta="Contraseña">
-          <input
+          <Entrada
             type="password"
             name="password"
             required
             minLength={8}
             autoComplete="new-password"
-            className="input w-full"
           />
         </Campo>
         <Campo etiqueta="Confirmar contraseña">
-          <input
+          <Entrada
             type="password"
             name="confirmar"
             required
             minLength={8}
             autoComplete="new-password"
-            className="input w-full"
           />
         </Campo>
       </FormularioAuth>

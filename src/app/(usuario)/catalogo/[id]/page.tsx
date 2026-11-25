@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EtiquetaLomo } from "@/components/etiqueta-lomo";
-import { InsigniaEstado } from "@/components/insignia-estado";
-import { Dato, Seccion } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
 import { Disponibilidad } from "@/components/tarjeta-titulo";
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
+import { InsigniaEstado } from "@/components/ui/insignia-estado";
+import { Dato, Encabezado, Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Tarjeta } from "@/components/ui/tarjeta";
 import { disponibles, TIPOS, type Titulo } from "@/lib/biblioteca";
 
 export default async function DetalleTitulo({
@@ -30,18 +33,16 @@ export default async function DetalleTitulo({
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px] items-start">
         <div className="space-y-8 min-w-0">
-          <header className="flex items-start gap-5">
+          <div className="flex items-start gap-5">
             <EtiquetaLomo signatura={t.clasificacion} />
-            <div className="min-w-0">
-              <h1 className="text-3xl font-bold sm:text-4xl">{t.titulo}</h1>
-              <p className="mt-2 text-lg text-base-content/70">
-                {t.autores}. {t.editorial}, {t.anio}.
-              </p>
-              <p className="mt-3">
-                <Disponibilidad titulo={t} />
-              </p>
+            <div className="min-w-0 flex-1">
+              <Encabezado
+                titulo={t.titulo}
+                descripcion={`${t.autores}. ${t.editorial}, ${t.anio}.`}
+                accion={<Disponibilidad titulo={t} />}
+              />
             </div>
-          </header>
+          </div>
           <p className="max-w-[68ch] leading-relaxed">{t.resumen}</p>
 
           <Seccion titulo="Ejemplares">
@@ -60,7 +61,7 @@ export default async function DetalleTitulo({
           </Seccion>
         </div>
 
-        <aside className="tarjeta p-6 space-y-6">
+        <Tarjeta elemento="aside" className="p-6 space-y-6">
           <dl className="space-y-3">
             <Dato etiqueta="Tipo de material">{TIPOS[t.tipo]}</Dato>
             <Dato etiqueta="Editorial">{t.editorial}</Dato>
@@ -73,18 +74,13 @@ export default async function DetalleTitulo({
             </Dato>
           </dl>
           {libres > 0 ? (
-            <Link
-              href={`/catalogo/${t.id}/solicitar`}
-              className="btn btn-primary w-full"
-            >
+            <Boton href={`/catalogo/${t.id}/solicitar`} anchoCompleto>
               Solicitar préstamo
-            </Link>
+            </Boton>
           ) : (
-            <div role="alert" className="alert alert-error">
-              <span>Sin ejemplares disponibles por ahora.</span>
-            </div>
+            <Alerta tono="error">Sin ejemplares disponibles por ahora.</Alerta>
           )}
-        </aside>
+        </Tarjeta>
       </div>
     </main>
   );

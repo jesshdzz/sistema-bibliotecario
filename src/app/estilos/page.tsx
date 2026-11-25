@@ -1,7 +1,22 @@
-import { Campo } from "@/components/campo";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { TarjetaTitulo } from "@/components/tarjeta-titulo";
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
+import {
+  AreaTexto,
+  Campo,
+  Entrada,
+  Grupo,
+  Opcion,
+  Segmentado,
+  Selector,
+} from "@/components/ui/campo";
+import { Insignia } from "@/components/ui/insignia";
+import { InsigniaEstado } from "@/components/ui/insignia-estado";
+import { Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Cifra, Tarjeta, Vacio } from "@/components/ui/tarjeta";
 import type { Titulo } from "@/lib/biblioteca";
 
 // shortcut: sin datos hasta conectar la base (paso 4 de docs/spec/README.md)
@@ -14,7 +29,7 @@ export default function Estilos() {
 
       {/* ── Hero ── */}
       <section className="bg-neutral text-neutral-content py-20 border-b-4 border-secondary">
-        <div className="max-w-340 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="contenedor">
           <p className="text-neutral-content/70 text-sm font-mono uppercase tracking-widest mb-2">
             Universidad Tecnológica de la Mixteca
           </p>
@@ -27,26 +42,21 @@ export default function Estilos() {
           </p>
           {/* OPAC Search */}
           <div className="flex gap-2 max-w-xl">
-            <input
+            <Entrada
               type="text"
+              tamano="lg"
               aria-label="Buscar en el catálogo"
               placeholder="Título, autor, ISBN, signatura…"
-              className="input input-lg flex-1 bg-base-100 text-base-content border-base-300"
+              className="flex-1"
             />
-            <button type="button" className="btn btn-primary btn-lg">
-              Buscar
-            </button>
+            <Boton tamano="lg">Buscar</Boton>
           </div>
         </div>
       </section>
 
-      <main className="max-w-340 mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
-        {/* ── Colores semánticos ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">
-            Paleta semántica
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <main className="contenedor space-y-16 py-12">
+        <Seccion titulo="Paleta semántica">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
               {
                 bg: "bg-primary",
@@ -85,12 +95,10 @@ export default function Estilos() {
               </div>
             ))}
           </div>
-        </section>
+        </Seccion>
 
-        {/* ── Tipografía ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">Tipografía</h2>
-          <div className="bg-base-100 border border-base-300 rounded-box p-6 space-y-4">
+        <Seccion titulo="Tipografía">
+          <Tarjeta className="space-y-4 p-6">
             <p className="font-serif text-4xl">
               Playfair Display — Títulos editoriales
             </p>
@@ -101,252 +109,229 @@ export default function Estilos() {
               QA76.73 .P98 2026 — Signaturas topográficas · ISBN
               978-0-000-00000-0
             </p>
-          </div>
-        </section>
+          </Tarjeta>
+        </Seccion>
 
-        {/* ── Buttons ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">Botones</h2>
-          <div className="flex flex-wrap gap-3">
-            <button type="button" className="btn btn-primary">
-              Solicitar préstamo
-            </button>
-            <button type="button" className="btn btn-secondary">
-              Colección especial
-            </button>
-            <button type="button" className="btn btn-accent">
-              Leer en línea
-            </button>
-            <button type="button" className="btn btn-neutral">
-              Neutro
-            </button>
-            <button type="button" className="btn btn-ghost">
-              Fantasma
-            </button>
-            <button type="button" className="btn btn-outline btn-primary">
-              Contorno
-            </button>
-            <button type="button" className="btn btn-primary" disabled>
-              Deshabilitado
-            </button>
+        <Seccion titulo="Botones">
+          <div className="space-y-3">
+            {(["solido", "contorno", "texto"] as const).map((variante) => (
+              <div key={variante} className="flex flex-wrap items-center gap-3">
+                {(
+                  [
+                    "primary",
+                    "secondary",
+                    "accent",
+                    "error",
+                    "neutral",
+                  ] as const
+                ).map((color) => (
+                  <Boton key={color} variante={variante} color={color}>
+                    {variante} {color}
+                  </Boton>
+                ))}
+              </div>
+            ))}
+            <div className="flex flex-wrap items-center gap-3">
+              <Boton tamano="xs">xs</Boton>
+              <Boton tamano="sm">sm</Boton>
+              <Boton>md</Boton>
+              <Boton tamano="lg">lg</Boton>
+              <Boton disabled>Deshabilitado</Boton>
+              <Boton href="/estilos" variante="contorno">
+                Enlace
+              </Boton>
+            </div>
+            <Boton anchoCompleto className="max-w-xs">
+              Ancho completo
+            </Boton>
           </div>
-          <div className="flex flex-wrap gap-3 mt-3">
-            <button type="button" className="btn btn-info btn-sm">
-              Info
-            </button>
-            <button type="button" className="btn btn-success btn-sm">
-              Préstamo confirmado
-            </button>
-            <button type="button" className="btn btn-warning btn-sm">
-              Vence pronto
-            </button>
-            <button type="button" className="btn btn-error btn-sm">
-              No disponible
-            </button>
-          </div>
-        </section>
+        </Seccion>
 
-        {/* ── Cards de catálogo ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">
-            Tarjetas de catálogo
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {titulos.length === 0 && (
-              <p className="tarjeta p-6 text-base-content/70">
-                No hay títulos que mostrar.
-              </p>
-            )}
+        <Seccion titulo="Insignias">
+          <div className="flex flex-wrap gap-2">
+            {(
+              [
+                "primary",
+                "secondary",
+                "accent",
+                "info",
+                "success",
+                "warning",
+                "error",
+                "ghost",
+              ] as const
+            ).map((color) => (
+              <Insignia key={color} color={color}>
+                {color}
+              </Insignia>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(
+              [
+                "disponible",
+                "apartado",
+                "prestado",
+                "en_sala",
+                "pre_prestamo",
+                "activo",
+                "vencido",
+                "devuelto",
+              ] as const
+            ).map((estado) => (
+              <InsigniaEstado key={estado} estado={estado} />
+            ))}
+          </div>
+        </Seccion>
+
+        <Seccion titulo="Tarjetas">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Tarjeta className="p-6">Tarjeta</Tarjeta>
+            <Tarjeta acento="primary" className="p-6">
+              Tarjeta con acento primary
+            </Tarjeta>
+            <Tarjeta acento="secondary" className="p-6">
+              Tarjeta con acento secondary
+            </Tarjeta>
+            <Cifra etiqueta="Cifra" valor={12} />
+            <Cifra
+              etiqueta="Cifra con enlace"
+              valor={3}
+              href="/estilos"
+              nota="Ver detalle"
+            />
+          </div>
+          <div className="mt-6">
+            <Vacio>Estado vacío: no hay registros que mostrar.</Vacio>
+          </div>
+        </Seccion>
+
+        <Seccion titulo="Tarjetas de catálogo">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {titulos.length === 0 && <Vacio>No hay títulos que mostrar.</Vacio>}
             {titulos.slice(0, 3).map((t) => (
               <TarjetaTitulo key={t.id} titulo={t} />
             ))}
           </div>
-        </section>
+        </Seccion>
 
-        {/* ── Alertas / Estados ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">
-            Alertas del sistema
-          </h2>
+        <Seccion titulo="Alertas del sistema">
           <div className="space-y-3">
-            <div role="alert" className="alert alert-info">
-              <span>
-                Horario de atención: lunes a viernes de 9:00 a 20:00 h.
-              </span>
-            </div>
-            <div role="alert" className="alert alert-success">
-              <span>
-                Préstamo registrado correctamente. Folio:{" "}
-                <span className="font-mono">BIB-2026-004821</span>
-              </span>
-            </div>
-            <div role="alert" className="alert alert-warning">
-              <span>
-                Tu ejemplar vence en 2 días. Puedes renovarlo en línea si no hay
-                reservas pendientes.
-              </span>
-            </div>
-            <div role="alert" className="alert alert-error">
-              <span>
-                No es posible solicitar préstamos. Tienes una multa de 5 días
-                sin préstamo por devolver con retraso.
-              </span>
-            </div>
+            <Alerta tono="info">
+              Horario de atención: lunes a viernes de 9:00 a 20:00 h.
+            </Alerta>
+            <Alerta tono="success">
+              Préstamo registrado correctamente. Folio:{" "}
+              <Mono>BIB-2026-004821</Mono>
+            </Alerta>
+            <Alerta tono="warning">
+              Tu ejemplar vence en 2 días. Puedes renovarlo en línea si no hay
+              reservas pendientes.
+            </Alerta>
+            <Alerta tono="error">
+              No es posible solicitar préstamos. Tienes una multa de 5 días sin
+              préstamo por devolver con retraso.
+            </Alerta>
           </div>
-        </section>
+        </Seccion>
 
-        {/* ── Formulario ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">
-            Formulario de búsqueda avanzada
-          </h2>
-          <div className="bg-base-100 border border-base-300 rounded-box p-6">
-            <div className="grid sm:grid-cols-2 gap-4">
+        <Seccion titulo="Formulario de búsqueda avanzada">
+          <Tarjeta className="p-6">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Campo etiqueta="Título">
-                <input
-                  type="text"
-                  placeholder="Ej. Introducción a…"
-                  className="input w-full"
-                />
+                <Entrada type="text" placeholder="Ej. Introducción a…" />
               </Campo>
-              <Campo etiqueta="Autor">
-                <input
-                  type="text"
-                  placeholder="Ej. Cormen"
-                  className="input w-full"
-                />
+              <Campo etiqueta="Autor" ayuda="Apellido o nombre completo.">
+                <Entrada type="text" placeholder="Ej. Cormen" />
               </Campo>
-              <Campo etiqueta="ISBN">
-                <input
-                  type="text"
-                  placeholder="978-…"
-                  className="input w-full font-mono"
-                />
+              <Campo etiqueta="ISBN" error="El ISBN no es válido.">
+                <Entrada type="text" mono placeholder="978-…" />
               </Campo>
               <Campo etiqueta="Tipo de material">
-                <select className="select w-full">
+                <Selector>
                   <option>Todos</option>
                   <option>Libro</option>
                   <option>Revista</option>
                   <option>Artículo</option>
-                </select>
+                </Selector>
+              </Campo>
+              <Grupo etiqueta="Modalidad">
+                <Opcion tipo="radio" etiqueta="A domicilio" name="modalidad" />
+                <Opcion tipo="radio" etiqueta="En sala" name="modalidad" />
+              </Grupo>
+              <Campo etiqueta="Notas">
+                <AreaTexto rows={3} />
               </Campo>
             </div>
-            <div className="mt-4 flex gap-3 items-center flex-wrap">
-              <label className="flex gap-2 items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-primary checkbox-sm"
-                  defaultChecked
-                />
-                <span className="text-sm">Solo disponibles</span>
-              </label>
-              <label className="flex gap-2 items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-primary checkbox-sm"
-                />
-                <span className="text-sm">Acceso digital</span>
-              </label>
-              <button type="button" className="btn btn-primary ml-auto">
-                Buscar
-              </button>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Opcion
+                tipo="checkbox"
+                etiqueta="Solo disponibles"
+                defaultChecked
+              />
+              <Opcion tipo="checkbox" etiqueta="Acceso digital" />
+              <Boton className="ml-auto">Buscar</Boton>
             </div>
-          </div>
-        </section>
+          </Tarjeta>
+        </Seccion>
 
-        {/* ── Tabla de préstamos ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-6">
-            Mis préstamos activos
-          </h2>
-          <div className="bg-base-100 border border-base-300 rounded-box overflow-x-auto">
-            <table className="table">
-              <thead className="bg-base-300">
-                <tr>
-                  <th>Folio</th>
-                  <th>Título</th>
-                  <th>Vencimiento</th>
-                  <th>Estado</th>
-                  <th>
-                    <span className="sr-only">Acciones</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  {
-                    folio: "BIB-2026-004821",
-                    titulo: "Clean Code",
-                    vence: "2026-11-20",
-                    estado: "Activo",
-                    color: "badge-success",
-                  },
-                  {
-                    folio: "BIB-2026-004755",
-                    titulo: "El Nombre de la Rosa",
-                    vence: "2026-11-16",
-                    estado: "Por vencer",
-                    color: "badge-warning",
-                  },
-                  {
-                    folio: "BIB-2026-004601",
-                    titulo: "Introducción a los Algoritmos",
-                    vence: "2026-10-30",
-                    estado: "Vencido",
-                    color: "badge-error",
-                  },
-                ].map((row) => (
-                  <tr key={row.folio}>
-                    <td>
-                      <span className="font-mono text-[13px]">{row.folio}</span>
-                    </td>
-                    <td className="font-sans font-medium">{row.titulo}</td>
-                    <td className="text-base-content/70 text-sm">
-                      {row.vence}
-                    </td>
-                    <td>
-                      <span className={`badge ${row.color} badge-sm`}>
-                        {row.estado}
-                      </span>
-                    </td>
-                    <td>
-                      <button type="button" className="btn btn-ghost btn-xs">
-                        Renovar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <Seccion titulo="Mis préstamos activos">
+          <Tabla
+            columnas={["Folio", "Título", "Vencimiento", "Estado", "Acciones"]}
+          >
+            {(
+              [
+                ["BIB-2026-004821", "Clean Code", "2026-11-20", "activo"],
+                [
+                  "BIB-2026-004755",
+                  "El Nombre de la Rosa",
+                  "2026-11-16",
+                  "pre_prestamo",
+                ],
+                [
+                  "BIB-2026-004601",
+                  "Introducción a los Algoritmos",
+                  "2026-10-30",
+                  "vencido",
+                ],
+              ] as const
+            ).map(([folio, titulo, vence, estado]) => (
+              <tr key={folio}>
+                <td>
+                  <Mono>{folio}</Mono>
+                </td>
+                <td className="font-medium">{titulo}</td>
+                <td className="text-sm text-base-content/70">{vence}</td>
+                <td>
+                  <InsigniaEstado estado={estado} />
+                </td>
+                <td>
+                  <Boton variante="texto" tamano="xs">
+                    Renovar
+                  </Boton>
+                </td>
+              </tr>
+            ))}
+          </Tabla>
+        </Seccion>
 
-        {/* ── Theme switcher ── */}
-        <section>
-          <h2 className="font-serif text-3xl font-bold mb-4">Cambiar tema</h2>
-          <p className="text-base-content/70 text-sm mb-4">
+        <Seccion titulo="Cambiar tema">
+          <p className="mb-4 text-sm text-base-content/70">
             Verifica que todos los componentes anteriores funcionen en ambos
             temas sin clases <code className="font-mono">dark:</code>.
           </p>
           {/* theme-controller de DaisyUI: cambia el tema con CSS, sin JS */}
-          <div className="join">
-            <input
-              type="radio"
+          <div className="max-w-xs">
+            <Segmentado
               name="tema"
-              value="biblioteca-light"
-              aria-label="Claro"
-              className="btn join-item theme-controller"
-            />
-            <input
-              type="radio"
-              name="tema"
-              value="biblioteca-dark"
-              aria-label="Oscuro"
-              className="btn join-item theme-controller"
+              tema
+              opciones={[
+                ["biblioteca-light", "Claro"],
+                ["biblioteca-dark", "Oscuro"],
+              ]}
             />
           </div>
-        </section>
+        </Seccion>
       </main>
 
       <Footer />

@@ -1,6 +1,8 @@
-import Link from "next/link";
-import { Encabezado, Seccion } from "@/components/pagina";
-import { Mono, Tabla } from "@/components/tabla";
+import { Boton } from "@/components/ui/boton";
+import { InsigniaMulta } from "@/components/ui/insignia-estado";
+import { Encabezado, Seccion } from "@/components/ui/pagina";
+import { Mono, Tabla } from "@/components/ui/tabla";
+import { Cifra, Vacio } from "@/components/ui/tarjeta";
 import {
   MOTIVOS,
   type Multa,
@@ -9,13 +11,6 @@ import {
   uno,
 } from "@/lib/biblioteca";
 import { CeldaUsuario, Pestanas, TablaPendientes } from "../prestamos/celdas";
-
-// warning = multa pendiente, según el design system.
-const ESTADOS: Record<Multa["estado"], [string, string]> = {
-  pendiente: ["Pendiente", "badge-warning"],
-  cumplida: ["Cumplida", "badge-success"],
-  condonada: ["Condonada", "badge-ghost"],
-};
 
 const FILTROS = [
   ["", "Todas"],
@@ -59,31 +54,24 @@ export default async function Multas({
         titulo="Retardos y multas"
         descripcion="Préstamos fuera de plazo y multas: días sin préstamo por retraso y reposición del ejemplar por extravío o maltrato."
       />
-      <dl className="grid grid-cols-2 gap-4 xl:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-4 xl:grid-cols-3">
         {cifras.map(([etiqueta, valor, nota]) => (
-          <div key={etiqueta} className="tarjeta p-5">
-            <dt className="text-sm text-base-content/70">{etiqueta}</dt>
-            <dd className="mt-1 text-3xl font-semibold">{valor}</dd>
-            <dd className="mt-1 text-sm text-base-content/70">{nota}</dd>
-          </div>
+          <li key={etiqueta}>
+            <Cifra etiqueta={etiqueta} valor={valor} nota={nota} />
+          </li>
         ))}
-      </dl>
+      </ul>
 
       <Seccion titulo="Retardos en curso">
         {retardos.length === 0 ? (
-          <p className="tarjeta p-6 text-base-content/70">
-            No hay préstamos fuera de plazo.
-          </p>
+          <Vacio>No hay préstamos fuera de plazo.</Vacio>
         ) : (
           <TablaPendientes
             prestamos={retardos}
             accion={(p) => (
-              <Link
-                href={`/admin/devoluciones?q=${p.folio}`}
-                className="btn btn-primary btn-xs whitespace-nowrap"
-              >
+              <Boton href={`/admin/devoluciones?q=${p.folio}`} tamano="xs">
                 Registrar devolución
-              </Link>
+              </Boton>
             )}
           />
         )}
@@ -118,27 +106,18 @@ export default async function Multas({
                 <td>{MOTIVOS[m.motivo]}</td>
                 <td className="whitespace-nowrap font-medium">{sancion(m)}</td>
                 <td>
-                  <span
-                    className={`badge ${ESTADOS[m.estado][1]} badge-sm whitespace-nowrap`}
-                  >
-                    {ESTADOS[m.estado][0]}
-                  </span>
+                  <InsigniaMulta estado={m.estado} />
                 </td>
                 <td>
                   {/* shortcut: los botones no hacen nada en el prototipo; conectar a server actions cuando exista la tabla `multa`. */}
                   {m.estado === "pendiente" && (
                     <div className="flex gap-1">
                       {m.motivo !== "retraso" && (
-                        <button
-                          type="button"
-                          className="btn btn-primary btn-xs whitespace-nowrap"
-                        >
-                          Registrar reposición
-                        </button>
+                        <Boton tamano="xs">Registrar reposición</Boton>
                       )}
-                      <button type="button" className="btn btn-ghost btn-xs">
+                      <Boton variante="texto" tamano="xs">
                         Condonar
-                      </button>
+                      </Boton>
                     </div>
                   )}
                 </td>

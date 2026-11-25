@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BotonCerrarSesion } from "@/components/boton-cerrar-sesion";
-import { Dato, Encabezado, Seccion } from "@/components/pagina";
 import { Papeleta } from "@/components/papeleta";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
+import { Insignia } from "@/components/ui/insignia";
+import { Dato, Encabezado, Seccion } from "@/components/ui/pagina";
+import { Tarjeta, Vacio } from "@/components/ui/tarjeta";
 import { ESTADOS_VIVOS, type Prestamo, type Titulo } from "@/lib/biblioteca";
 import { getCarreras } from "@/lib/carreras";
 import { usuarioSesion } from "@/lib/sesion";
@@ -26,22 +30,22 @@ export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
       <Encabezado
         titulo="Mi cuenta"
         descripcion="Tus datos y el seguimiento de tus préstamos."
-        accion={<BotonCerrarSesion className="btn btn-outline btn-sm" />}
+        accion={<BotonCerrarSesion />}
       />
 
       {solicitado && (
-        <div role="alert" className="alert alert-success">
-          <span>
-            Solicitud registrada: «{solicitado.titulo}». Recógelo en el
-            mostrador con tu credencial.
-          </span>
-        </div>
+        <Alerta tono="success">
+          Solicitud registrada: «{solicitado.titulo}». Recógelo en el mostrador
+          con tu credencial.
+        </Alerta>
       )}
 
       <div className="grid gap-8 lg:grid-cols-[320px_1fr] items-start">
-        <aside className="tarjeta p-6">
+        <Tarjeta elemento="aside" className="p-6">
           <p className="text-lg font-semibold">{u.nombre}</p>
-          <span className="badge badge-secondary badge-sm mt-1">{u.rol}</span>
+          <Insignia color="secondary" className="mt-1">
+            {u.rol}
+          </Insignia>
           <dl className="space-y-3 mt-6">
             <Dato etiqueta="Matrícula" mono>
               {u.matricula}
@@ -54,28 +58,28 @@ export default async function Perfil({ searchParams }: PageProps<"/perfil">) {
             </Dato>
             <Dato etiqueta="Semestre">{u.semestre}</Dato>
           </dl>
-        </aside>
+        </Tarjeta>
 
         <div className="space-y-8 min-w-0">
           <Seccion titulo="Préstamo vigente">
             {vivo ? (
-              <div className="tarjeta max-w-xl border-t-4 border-t-primary p-6">
+              <Tarjeta acento="primary" className="max-w-xl p-6">
                 <Papeleta prestamo={vivo} />
                 {/* shortcut: los botones no hacen nada en el prototipo; conectar a server actions. */}
-                <button type="button" className="btn btn-primary mt-5">
+                <Boton className="mt-5">
                   {vivo.estado === "pre_prestamo"
                     ? "Cancelar solicitud"
                     : "Renovar préstamo"}
-                </button>
-              </div>
+                </Boton>
+              </Tarjeta>
             ) : (
-              <p className="tarjeta p-6 text-base-content/70">
+              <Vacio>
                 No tienes préstamos vigentes. Busca material en el{" "}
                 <Link href="/catalogo" className="link">
                   catálogo
                 </Link>
                 .
-              </p>
+              </Vacio>
             )}
           </Seccion>
           <Seccion titulo="Historial">

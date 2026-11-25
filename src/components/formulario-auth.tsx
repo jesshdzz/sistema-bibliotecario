@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { Alerta } from "@/components/ui/alerta";
+import { Boton } from "@/components/ui/boton";
 import { authClient, mensajeError } from "@/lib/auth-client";
 
 export function FormularioAuth({
@@ -61,17 +63,13 @@ export function FormularioAuth({
     <form onSubmit={enviar} onChange={() => setError(undefined)}>
       {children}
       {error && (
-        <div role="alert" className="alert alert-error mt-4">
-          <span>{error}</span>
-        </div>
+        <Alerta tono="error" className="mt-4">
+          {error}
+        </Alerta>
       )}
-      <button
-        type="submit"
-        disabled={enviando}
-        className="btn btn-primary mt-4 w-full"
-      >
+      <Boton type="submit" disabled={enviando} anchoCompleto className="mt-4">
         {boton}
-      </button>
+      </Boton>
     </form>
   );
 }

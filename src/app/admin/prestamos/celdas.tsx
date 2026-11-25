@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Mono, Tabla } from "@/components/tabla";
+import { Insignia } from "@/components/ui/insignia";
+import { Mono, Tabla } from "@/components/ui/tabla";
 import { dias, diasRetraso, fecha, type Prestamo } from "@/lib/biblioteca";
 
 /** Pestañas de filtro por `?estado=`; conservan la búsqueda `q` en curso. */
@@ -31,8 +32,8 @@ export function Pestanas({
             className={`tab gap-2 ${activo === valor ? "tab-active font-semibold before:bg-primary!" : ""}`}
           >
             {etiqueta}
-            <span className="font-mono text-[13px] font-medium text-base-content/70">
-              {total}
+            <span className="text-base-content/70">
+              <Mono>{total}</Mono>
             </span>
           </Link>
         ))}
@@ -102,9 +103,7 @@ export function TablaPendientes({
           <td className="whitespace-nowrap">{fecha(p.venceEn)}</td>
           <td className="whitespace-nowrap">
             {diasRetraso(p.venceEn) > 0 ? (
-              <span className="badge badge-error badge-sm">
-                {dias(diasRetraso(p.venceEn))}
-              </span>
+              <Insignia color="error">{dias(diasRetraso(p.venceEn))}</Insignia>
             ) : (
               <span className="text-base-content/70">En plazo</span>
             )}

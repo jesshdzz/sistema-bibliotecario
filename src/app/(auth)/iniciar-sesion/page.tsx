@@ -1,30 +1,33 @@
 import Link from "next/link";
-import { Campo } from "@/components/campo";
 import { FormularioAuth } from "@/components/formulario-auth";
+import { Campo, Entrada } from "@/components/ui/campo";
+import { Encabezado } from "@/components/ui/pagina";
 
 export default function IniciarSesion() {
   return (
     <>
-      <h1 className="text-3xl font-bold">Iniciar sesión</h1>
-      <p className="mt-1 mb-4 text-base-content/70">Accede con tu cuenta.</p>
+      <div className="mb-6">
+        <Encabezado
+          titulo="Iniciar sesión"
+          descripcion="Accede con tu cuenta."
+        />
+      </div>
       <FormularioAuth modo="entrar" boton="Entrar">
         <Campo etiqueta="Correo electrónico">
-          <input
+          <Entrada
             type="email"
             name="email"
             required
             autoComplete="email"
             placeholder="nombre@utm.mx"
-            className="input w-full"
           />
         </Campo>
         <Campo etiqueta="Contraseña">
-          <input
+          <Entrada
             type="password"
             name="password"
             required
             autoComplete="current-password"
-            className="input w-full"
           />
         </Campo>
       </FormularioAuth>
