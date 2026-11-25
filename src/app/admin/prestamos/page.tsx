@@ -1,6 +1,8 @@
 import Form from "next/form";
-import { Encabezado } from "@/components/pagina";
 import { TablaPrestamos } from "@/components/tabla-prestamos";
+import { Boton } from "@/components/ui/boton";
+import { Entrada } from "@/components/ui/campo";
+import { Encabezado } from "@/components/ui/pagina";
 import { normalizar, type Prestamo, uno } from "@/lib/biblioteca";
 import { Pestanas } from "./celdas";
 
@@ -35,28 +37,34 @@ export default async function Prestamos({
       <Encabezado
         titulo="Préstamos"
         descripcion="Entrega solicitudes y registra devoluciones."
-        accion={
-          // key: vuelve a montar el campo para que refleje la búsqueda de la URL
-          <Form
-            key={q}
-            action="/admin/prestamos"
-            className="join w-full sm:w-auto"
-          >
-            {estado && <input type="hidden" name="estado" value={estado} />}
-            <input
-              type="search"
-              name="q"
-              defaultValue={q}
-              aria-label="Buscar por folio o usuario"
-              placeholder="Folio, nombre o matrícula"
-              className="input join-item w-full sm:w-72"
-            />
-            <button type="submit" className="btn btn-primary join-item">
-              Buscar
-            </button>
-          </Form>
-        }
       />
+      {/* key: vuelve a montar el campo para que refleje la búsqueda de la URL */}
+      <Form
+        key={q}
+        action="/admin/prestamos"
+        className="tarjeta flex flex-wrap gap-3 p-4"
+      >
+        {estado && <input type="hidden" name="estado" value={estado} />}
+        <Entrada
+          type="search"
+          name="q"
+          defaultValue={q}
+          aria-label="Buscar por folio o usuario"
+          placeholder="Folio, nombre o matrícula"
+          className="min-w-0 grow basis-64"
+        />
+        <Boton type="submit">Buscar</Boton>
+        {q && (
+          <Boton
+            href={
+              estado ? `/admin/prestamos?estado=${estado}` : "/admin/prestamos"
+            }
+            variante="texto"
+          >
+            Limpiar
+          </Boton>
+        )}
+      </Form>
       <Pestanas
         filtros={FILTROS.map(([valor, etiqueta]) => ({
           valor,
