@@ -1,8 +1,11 @@
 import Form from "next/form";
 import Link from "next/link";
-import { Seccion } from "@/components/pagina";
 import { Papeleta } from "@/components/papeleta";
 import { TarjetaTitulo } from "@/components/tarjeta-titulo";
+import { Boton } from "@/components/ui/boton";
+import { Entrada } from "@/components/ui/campo";
+import { Seccion } from "@/components/ui/pagina";
+import { Vacio } from "@/components/ui/tarjeta";
 import {
   ESTADOS_VIVOS,
   type Prestamo,
@@ -49,16 +52,17 @@ export default async function Inicio() {
               action="/catalogo"
               className="mt-8 flex max-w-2xl flex-col gap-2 sm:flex-row"
             >
-              <input
+              <Entrada
                 type="search"
                 name="q"
+                tamano="lg"
                 aria-label="Buscar en el catálogo"
                 placeholder="Título, autor, ISBN o signatura"
-                className="input input-lg w-full min-w-0 border-base-300 sm:flex-1 bg-base-100 text-base-content"
+                className="w-full min-w-0 sm:flex-1"
               />
-              <button type="submit" className="btn btn-secondary btn-lg">
+              <Boton type="submit" color="secondary" tamano="lg">
                 Buscar
-              </button>
+              </Boton>
             </Form>
             <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
               <span className="text-neutral-content/80">
@@ -84,9 +88,9 @@ export default async function Inicio() {
                   Tu préstamo vigente
                 </p>
                 <Papeleta prestamo={vivo} />
-                <Link href="/perfil" className="btn btn-primary mt-5 w-full">
+                <Boton href="/perfil" anchoCompleto className="mt-5">
                   Ver mis préstamos
-                </Link>
+                </Boton>
               </>
             ) : (
               <>
@@ -96,12 +100,9 @@ export default async function Inicio() {
                   Consulta el horario en el mostrador.
                 </p>
                 {!usuario && (
-                  <Link
-                    href="/iniciar-sesion"
-                    className="btn btn-primary mt-5 w-full"
-                  >
+                  <Boton href="/iniciar-sesion" anchoCompleto className="mt-5">
                     Iniciar sesión para solicitar préstamos
-                  </Link>
+                  </Boton>
                 )}
               </>
             )}
@@ -112,9 +113,7 @@ export default async function Inicio() {
       <main className="contenedor flex-1 space-y-14 py-12">
         <Seccion titulo="Novedades del acervo">
           {titulos.length === 0 ? (
-            <p className="tarjeta p-6 text-base-content/70">
-              Aún no hay títulos en el acervo.
-            </p>
+            <Vacio>Aún no hay títulos en el acervo.</Vacio>
           ) : (
             <div className="grid gap-4 lg:grid-cols-2">
               {titulos.slice(0, 4).map((t) => (
@@ -122,9 +121,9 @@ export default async function Inicio() {
               ))}
             </div>
           )}
-          <Link href="/catalogo" className="btn btn-outline btn-primary mt-6">
+          <Boton href="/catalogo" variante="contorno" className="mt-6">
             Ver todo el catálogo
-          </Link>
+          </Boton>
         </Seccion>
 
         <Seccion titulo="Cómo funciona el préstamo">
