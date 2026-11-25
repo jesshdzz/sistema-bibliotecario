@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Boton } from "@/components/ui/boton";
+import { Desplegable } from "@/components/ui/desplegable";
 import { esPersonal, usuarioSesion } from "@/lib/sesion";
 import { BotonCerrarSesion } from "./boton-cerrar-sesion";
 import { BotonTema } from "./boton-tema";
-import { Desplegable } from "./desplegable";
 import { EnlaceNav } from "./enlace-nav";
 
-const ACTIVO_MENU =
+export const ACTIVO_MENU =
   "aria-[current=page]:bg-primary aria-[current=page]:text-primary-content";
 
 export async function Navbar() {
@@ -73,12 +74,13 @@ export async function Navbar() {
               <BotonCerrarSesion className="h-10 cursor-pointer rounded-field border border-primary-content/40 px-3 text-sm font-medium hover:bg-primary-content/15" />
             </div>
           ) : (
-            <Link
+            <Boton
               href="/iniciar-sesion"
-              className="btn btn-secondary hidden md:inline-flex"
+              color="secondary"
+              className="hidden md:inline-flex"
             >
               Iniciar sesión
-            </Link>
+            </Boton>
           )}
 
           <Desplegable etiqueta="Menú" className="md:hidden">

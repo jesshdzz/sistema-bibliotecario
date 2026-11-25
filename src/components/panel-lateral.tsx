@@ -1,6 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { clasesBoton } from "@/components/ui/boton";
+import { Tarjeta } from "@/components/ui/tarjeta";
 
 export function PanelLateral({
   id,
@@ -18,7 +20,15 @@ export function PanelLateral({
     <div className="drawer lg:drawer-open">
       <input key={ruta} id={id} type="checkbox" className="drawer-toggle" />
       <div className="drawer-content min-w-0 lg:pl-6">
-        <label htmlFor={id} className="btn btn-outline btn-sm mb-4 lg:hidden">
+        <label
+          htmlFor={id}
+          className={clasesBoton({
+            variante: "contorno",
+            color: "neutral",
+            tamano: "sm",
+            className: "mb-4 lg:hidden",
+          })}
+        >
           {etiqueta}
         </label>
         {children}
@@ -29,9 +39,12 @@ export function PanelLateral({
           aria-label="Cerrar panel"
           className="drawer-overlay"
         />
-        <aside className="tarjeta w-70 min-h-full p-4 max-lg:rounded-none lg:min-h-0">
+        <Tarjeta
+          elemento="aside"
+          className="w-70 min-h-full p-4 max-lg:rounded-none lg:min-h-0"
+        >
           {lateral}
-        </aside>
+        </Tarjeta>
       </div>
     </div>
   );
